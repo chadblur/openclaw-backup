@@ -1,7 +1,7 @@
 {
   "task_id": "FEISHU-20260317-001",
-  "reported_at": "2026-03-24T00:56:43+08:00",
-  "last_checked_at": "2026-03-24T00:56:43+08:00",
+  "reported_at": "2026-03-24T01:41:43+08:00",
+  "last_checked_at": "2026-03-24T01:56:43+08:00",
   "source": "task_board_and_rd_session_history",
   "session_key": "agent:rd:feishu:group:oc_e0b0bb9b0abdf7e6eda7eaac90a50c4f",
   "fingerprint": {
@@ -12,7 +12,7 @@
       "群消息已发送: om_x100b53327baa4ca0c11b2c64cf16242"
     ]
   },
-  "summary": "已确认收到客户端截图，飞书 @ 提及兜底任务闭环；本次复查未发现新的可对外进展。",
+  "summary": "任务已在更早前闭环并完成群内同步；本次复查未发现新的可对外进展。",
   "last_check_result": "no_new_progress_since_closure_report",
   "action_taken": "no_group_message_sent"
 }
