@@ -1,8 +1,9 @@
 {
   "task_id": "FEISHU-20260317-001",
-  "reported_at": "2026-03-24T01:41:43+08:00",
-  "last_checked_at": "2026-03-24T02:56:43+08:00",
+  "reported_at": "2026-03-24T03:46:43+08:00",
+  "last_checked_at": "2026-03-24T03:56:43+08:00",
   "source": "task_board_and_rd_session_history",
+  "session_key": "agent:rd:feishu:group:oc_e0b0bb9b0abdf7e6eda7eaac90a50c4f",
   "fingerprint": {
     "status": "completed_with_client_screenshot_confirmation",
     "task_board_status": "已完成",
@@ -11,7 +12,7 @@
       "群消息已发送: om_x100b53327baa4ca0c11b2c64cf16242"
     ]
   },
-  "summary": "任务已闭环且此前已完成群内同步；本次复查 RD 会话与任务看板，仍无新的可对外进展。",
+  "summary": "任务已闭环且此前已完成群内同步；本次复查看板状态仍为已完成，RD 最近会话也没有新的上线/验证类增量进展。",
   "last_check_result": "no_new_progress_since_closure_report",
   "action_taken": "no_group_message_sent"
 }
