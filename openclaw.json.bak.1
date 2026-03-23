@@ -1,0 +1,575 @@
+{
+  "meta": {
+    "lastTouchedVersion": "2026.3.11",
+    "lastTouchedAt": "2026-03-23T09:47:33.054Z"
+  },
+  "wizard": {
+    "lastRunAt": "2026-03-17T13:56:15.873Z",
+    "lastRunVersion": "2026.3.8",
+    "lastRunCommand": "doctor",
+    "lastRunMode": "local"
+  },
+  "models": {
+    "mode": "merge",
+    "providers": {
+      "qt-cool": {
+        "baseUrl": "https://gpt.qt.cool/v1",
+        "apiKey": "<REDACTED>",
+        "api": "openai-completions",
+        "models": [
+          {
+            "id": "gpt-5.2",
+            "name": "gpt-5.2",
+            "compat": {
+              "supportsStore": false
+            }
+          }
+        ]
+      },
+      "CLIProxy.103.180": {
+        "baseUrl": "http://38.123.103.180:8317/v1",
+        "apiKey": "<REDACTED>",
+        "api": "openai-completions",
+        "models": [
+          {
+            "id": "gpt-5.4",
+            "name": "gpt-5.4"
+          },
+          {
+            "id": "gpt-5.3-codex",
+            "name": "gpt-5.3-codex"
+          },
+          {
+            "id": "gpt-5.2",
+            "name": "gpt-5.2"
+          },
+          {
+            "id": "gpt-5.2-codex",
+            "name": "gpt-5.2-codex"
+          }
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "CLIProxy.103.180/gpt-5.4"
+      },
+      "workspace": "/root/.openclaw/workspace",
+      "compaction": {
+        "mode": "safeguard"
+      },
+      "maxConcurrent": 4,
+      "subagents": {
+        "maxConcurrent": 8
+      }
+    },
+    "list": [
+      {
+        "id": "pm",
+        "workspace": "/root/.openclaw/workspace-pm",
+        "agentDir": "/root/.openclaw/workspace-pm",
+        "identity": {
+          "name": "项目经理",
+          "emoji": "🧩"
+        },
+        "groupChat": {
+          "mentionPatterns": [
+            "@项目经理",
+            "项目经理",
+            "@产品经理",
+            "产品经理",
+            "pm"
+          ]
+        },
+        "subagents": {
+          "allowAgents": [
+            "rd",
+            "qa",
+            "ce"
+          ]
+        }
+      },
+      {
+        "id": "rd",
+        "workspace": "/root/.openclaw/workspace-rd",
+        "agentDir": "/root/.openclaw/workspace-rd",
+        "identity": {
+          "name": "工程师",
+          "emoji": "💻"
+        },
+        "groupChat": {
+          "mentionPatterns": [
+            "@工程师",
+            "工程师",
+            "rd",
+            "开发",
+            "研发",
+            "码农"
+          ]
+        },
+        "subagents": {
+          "allowAgents": [
+            "pm"
+          ]
+        }
+      },
+      {
+        "id": "qa",
+        "workspace": "/root/.openclaw/workspace-qa",
+        "agentDir": "/root/.openclaw/workspace-qa",
+        "identity": {
+          "name": "测试工程师",
+          "emoji": "🔍"
+        },
+        "groupChat": {
+          "mentionPatterns": [
+            "@测试",
+            "测试工程师",
+            "qa"
+          ]
+        },
+        "subagents": {
+          "allowAgents": [
+            "pm",
+            "rd"
+          ]
+        }
+      },
+      {
+        "id": "ce",
+        "workspace": "/root/.openclaw/workspace-ce",
+        "agentDir": "/root/.openclaw/workspace-ce",
+        "identity": {
+          "name": "小美",
+          "emoji": "🌸"
+        },
+        "groupChat": {
+          "mentionPatterns": [
+            "@小美",
+            "小美",
+            "ce",
+            "鼓励师"
+          ]
+        },
+        "subagents": {
+          "allowAgents": [
+            "pm",
+            "rd",
+            "qa"
+          ]
+        }
+      },
+      {
+        "id": "taizi",
+        "workspace": "/root/.openclaw/workspace-taizi",
+        "subagents": {
+          "allowAgents": [
+            "zhongshu"
+          ]
+        }
+      },
+      {
+        "id": "zhongshu",
+        "workspace": "/root/.openclaw/workspace-zhongshu",
+        "subagents": {
+          "allowAgents": [
+            "menxia",
+            "shangshu"
+          ]
+        }
+      },
+      {
+        "id": "menxia",
+        "workspace": "/root/.openclaw/workspace-menxia",
+        "subagents": {
+          "allowAgents": [
+            "shangshu",
+            "zhongshu"
+          ]
+        }
+      },
+      {
+        "id": "shangshu",
+        "workspace": "/root/.openclaw/workspace-shangshu",
+        "subagents": {
+          "allowAgents": [
+            "zhongshu",
+            "menxia",
+            "hubu",
+            "libu",
+            "bingbu",
+            "xingbu",
+            "gongbu",
+            "libu_hr"
+          ]
+        }
+      },
+      {
+        "id": "hubu",
+        "workspace": "/root/.openclaw/workspace-hubu",
+        "subagents": {
+          "allowAgents": [
+            "shangshu"
+          ]
+        }
+      },
+      {
+        "id": "libu",
+        "workspace": "/root/.openclaw/workspace-libu",
+        "subagents": {
+          "allowAgents": [
+            "shangshu"
+          ]
+        }
+      },
+      {
+        "id": "bingbu",
+        "workspace": "/root/.openclaw/workspace-bingbu",
+        "subagents": {
+          "allowAgents": [
+            "shangshu"
+          ]
+        }
+      },
+      {
+        "id": "xingbu",
+        "workspace": "/root/.openclaw/workspace-xingbu",
+        "subagents": {
+          "allowAgents": [
+            "shangshu"
+          ]
+        }
+      },
+      {
+        "id": "gongbu",
+        "workspace": "/root/.openclaw/workspace-gongbu",
+        "subagents": {
+          "allowAgents": [
+            "shangshu"
+          ]
+        }
+      },
+      {
+        "id": "libu_hr",
+        "workspace": "/root/.openclaw/workspace-libu_hr",
+        "subagents": {
+          "allowAgents": [
+            "shangshu"
+          ]
+        }
+      },
+      {
+        "id": "zaochao",
+        "workspace": "/root/.openclaw/workspace-zaochao",
+        "subagents": {
+          "allowAgents": []
+        }
+      }
+    ]
+  },
+  "tools": {
+    "profile": "full",
+    "web": {
+      "search": {
+        "provider": "grok",
+        "grok": {
+          "apiKey": "<REDACTED>"
+        }
+      }
+    },
+    "sessions": {
+      "visibility": "all"
+    },
+    "agentToAgent": {
+      "enabled": true,
+      "allow": [
+        "pm",
+        "rd",
+        "qa",
+        "ce"
+      ]
+    }
+  },
+  "bindings": [
+    {
+      "agentId": "pm",
+      "match": {
+        "channel": "feishu",
+        "accountId": "feishu-bot-pm"
+      }
+    },
+    {
+      "agentId": "rd",
+      "match": {
+        "channel": "feishu",
+        "accountId": "feishu-bot-rd"
+      }
+    },
+    {
+      "agentId": "qa",
+      "match": {
+        "channel": "feishu",
+        "accountId": "feishu-bot-qa"
+      }
+    },
+    {
+      "agentId": "ce",
+      "match": {
+        "channel": "feishu",
+        "accountId": "feishu-bot-ce"
+      }
+    }
+  ],
+  "messages": {
+    "ackReactionScope": "group-mentions"
+  },
+  "commands": {
+    "native": "auto",
+    "nativeSkills": "auto",
+    "restart": true,
+    "ownerDisplay": "raw"
+  },
+  "session": {
+    "dmScope": "per-channel-peer",
+    "agentToAgent": {
+      "maxPingPongTurns": 5
+    }
+  },
+  "channels": {
+    "telegram": {
+      "enabled": true,
+      "dmPolicy": "pairing",
+      "botToken": "<REDACTED>",
+      "allowFrom": [
+        1400706851
+      ],
+      "groupPolicy": "allowlist",
+      "streaming": "partial"
+    },
+    "discord": {
+      "enabled": true,
+      "token": "<REDACTED>",
+      "groupPolicy": "open",
+      "streaming": "off",
+      "dmPolicy": "pairing"
+    },
+    "qqbot": {
+      "enabled": true,
+      "appId": "1903506803",
+      "clientSecret": "<REDACTED>"
+    },
+    "feishu": {
+      "enabled": true,
+      "domain": "feishu",
+      "connectionMode": "websocket",
+      "accounts": {
+        "feishu-bot-pm": {
+          "enabled": true,
+          "appId": "cli_a9320c5eeb9edcb5",
+          "appSecret": "<REDACTED>",
+          "openId": "ou_ffda60cdc9458027d2049e8da90030b1",
+          "connectionMode": "websocket",
+          "domain": "feishu",
+          "groupPolicy": "open",
+          "allowBots": "mentions",
+          "groups": {
+            "*": {
+              "requireMention": true,
+              "allowBots": true
+            }
+          }
+        },
+        "feishu-bot-rd": {
+          "enabled": true,
+          "appId": "cli_a933e77271b89cb2",
+          "appSecret": "<REDACTED>",
+          "openId": "ou_5886be9f5cacc19175f0913755010769",
+          "connectionMode": "websocket",
+          "domain": "feishu",
+          "groupPolicy": "open",
+          "allowBots": "mentions",
+          "groups": {
+            "*": {
+              "requireMention": true,
+              "allowBots": true
+            }
+          },
+          "mentionFallback": true
+        },
+        "feishu-bot-qa": {
+          "enabled": true,
+          "appId": "cli_a93380f932781cba",
+          "appSecret": "<REDACTED>",
+          "openId": "ou_040cab9e8fc841904a919858aa68bb8f",
+          "connectionMode": "websocket",
+          "domain": "feishu",
+          "groupPolicy": "open",
+          "allowBots": "mentions",
+          "groups": {
+            "*": {
+              "requireMention": true,
+              "allowBots": true
+            }
+          }
+        },
+        "feishu-bot-ce": {
+          "enabled": true,
+          "appId": "cli_a9338197aefe1cd2",
+          "appSecret": "<REDACTED>",
+          "openId": "ou_2d2e1709632f246fa5889892d7e25a3b",
+          "connectionMode": "websocket",
+          "domain": "feishu",
+          "groupPolicy": "open",
+          "allowBots": "all",
+          "groups": {
+            "*": {
+              "requireMention": false,
+              "allowBots": true
+            }
+          }
+        },
+        "default": {
+          "groupPolicy": "open"
+        }
+      },
+      "streaming": true,
+      "footer": {
+        "elapsed": true,
+        "status": true
+      },
+      "threadSession": true
+    }
+  },
+  "gateway": {
+    "port": 30187,
+    "mode": "local",
+    "bind": "lan",
+    "controlUi": {
+      "basePath": "/wjsz7x",
+      "allowedOrigins": [
+        "http://43.134.74.105:30187"
+      ],
+      "dangerouslyAllowHostHeaderOriginFallback": true,
+      "allowInsecureAuth": true,
+      "dangerouslyDisableDeviceAuth": true
+    },
+    "auth": {
+      "mode": "token",
+      "token": "<REDACTED>"
+    },
+    "tailscale": {
+      "mode": "off",
+      "resetOnExit": false
+    },
+    "reload": {
+      "mode": "hybrid",
+      "debounceMs": 300
+    }
+  },
+  "skills": {
+    "install": {
+      "nodeManager": "npm"
+    }
+  },
+  "plugins": {
+    "allow": [
+      "openclaw-lark",
+      "telegram",
+      "discord",
+      "openclaw-qqbot",
+      "feishu",
+      "openclaw-weixin"
+    ],
+    "entries": {
+      "feishu": {
+        "enabled": false
+      },
+      "telegram": {
+        "enabled": true
+      },
+      "discord": {
+        "enabled": true
+      },
+      "openclaw-lark": {
+        "enabled": true
+      },
+      "openclaw-qqbot": {
+        "enabled": true
+      },
+      "ddingtalk": {
+        "enabled": true
+      },
+      "wecom": {
+        "enabled": true
+      },
+      "adp-openclaw": {
+        "enabled": true
+      },
+      "openclaw-plugin-yuanbao": {
+        "enabled": true
+      },
+      "openclaw-weixin": {
+        "enabled": true
+      }
+    },
+    "installs": {
+      "openclaw-lark": {
+        "source": "npm",
+        "spec": "@larksuite/openclaw-lark",
+        "installPath": "/root/.openclaw/extensions/openclaw-lark",
+        "version": "2026.3.15",
+        "resolvedName": "@larksuite/openclaw-lark",
+        "resolvedVersion": "2026.3.15",
+        "resolvedSpec": "@larksuite/openclaw-lark@2026.3.15",
+        "integrity": "sha512-YGk63CgYG+YDUO2+TxdSPJZA6km52OpqAqf26vZHMUqawEKhiT4bcfD5JHh6VGazjUwRk5Bze1UyVKncc0csBA==",
+        "shasum": "997cb8ee9cf66dcd3a24477cb5f59f5fb1a57fff",
+        "resolvedAt": "2026-03-17T01:42:45.132Z",
+        "installedAt": "2026-03-17T01:46:32.168Z"
+      },
+      "openclaw-qqbot": {
+        "source": "npm",
+        "spec": "@tencent-connect/openclaw-qqbot@1.6.3",
+        "installPath": "/root/.openclaw/extensions/openclaw-qqbot",
+        "version": "1.6.3",
+        "installedAt": "2026-03-23T09:15:02.000Z"
+      },
+      "ddingtalk": {
+        "source": "npm",
+        "spec": "@largezhou/ddingtalk",
+        "installPath": "/root/.openclaw/extensions/ddingtalk",
+        "version": "1.4.2",
+        "installedAt": "2026-03-23T09:15:12.000Z"
+      },
+      "wecom": {
+        "source": "npm",
+        "spec": "@mocrane/wecom",
+        "installPath": "/root/.openclaw/extensions/wecom",
+        "version": "2026.3.20",
+        "installedAt": "2026-03-23T09:15:49.000Z"
+      },
+      "adp-openclaw": {
+        "source": "npm",
+        "spec": "adp-openclaw",
+        "installPath": "/root/.openclaw/extensions/adp-openclaw",
+        "version": "0.0.69",
+        "installedAt": "2026-03-23T09:15:53.000Z"
+      },
+      "openclaw-plugin-yuanbao": {
+        "source": "npm",
+        "spec": "openclaw-plugin-yuanbao@1.0.3",
+        "installPath": "/root/.openclaw/extensions/openclaw-plugin-yuanbao",
+        "version": "1.0.3",
+        "installedAt": "2026-03-23T09:15:59.000Z"
+      },
+      "openclaw-weixin": {
+        "source": "npm",
+        "spec": "@tencent-weixin/openclaw-weixin",
+        "installPath": "/root/.openclaw/extensions/openclaw-weixin",
+        "version": "1.0.2",
+        "installedAt": "2026-03-23T09:16:04.000Z"
+      }
+    }
+  }
+}

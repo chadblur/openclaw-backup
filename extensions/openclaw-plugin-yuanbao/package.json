@@ -1,0 +1,82 @@
+{
+  "name": "openclaw-plugin-yuanbao",
+  "version": "1.0.3",
+  "type": "module",
+  "description": "Tencent YuanBao intelligent bot channel plugin",
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "openclaw.plugin.json"
+  ],
+  "keywords": [
+    "openclaw",
+    "openclaw-plugin",
+    "tencent-im",
+    "yuanbao",
+    "chatbot"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint --quiet --cache 'index.ts' 'src/**/*.ts' --ignore-pattern 'src/debug/**'",
+    "lint:fix": "eslint --fix --quiet --cache 'index.ts' 'src/**/*.ts' --ignore-pattern 'src/debug/**'",
+    "pack:prod": "bash scripts/pack.sh --prod",
+    "pack:dev": "bash scripts/pack.sh --dev",
+    "test": "pnpm build && node --test test/*.test.mjs",
+    "release": "HUSKY=0 semantic-release --ci",
+    "release:internal": "HUSKY=0 RELEASE_TARGET=internal semantic-release --ci"
+  },
+  "openclaw": {
+    "extensions": [
+      "./dist/index.js"
+    ],
+    "channel": {
+      "id": "yuanbao",
+      "label": "元宝 Bot",
+      "selectionLabel": "元宝 Bot (yuanbao)",
+      "detailLabel": "元宝 Bot",
+      "docsPath": "/channels/yuanbao",
+      "docsLabel": "yuanbao",
+      "blurb": "YuanBao bot via WebSocket.",
+      "aliases": [
+        "yuanbao",
+        "元宝",
+        "即时通信"
+      ],
+      "order": 85
+    },
+    "install": {
+      "npmSpec": "openclaw-plugin-yuanbao",
+      "localPath": "extensions/yuanbao",
+      "defaultChoice": "npm"
+    }
+  },
+  "private": false,
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
+  "devDependencies": {
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/commit-analyzer": "^13.0.1",
+    "@semantic-release/exec": "^7.1.0",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/npm": "^13.1.5",
+    "@semantic-release/release-notes-generator": "^14.1.0",
+    "@types/node": "^20.19.37",
+    "@types/ws": "^8.18.1",
+    "semantic-release": "^25.0.3",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "cos-js-sdk-v5": "^1.8.7",
+    "protobufjs": "^8.0.0",
+    "uuid": "^13.0.0",
+    "ws": "^8.19.0"
+  },
+  "overrides": {
+    "fast-xml-parser": ">=4.5.4",
+    "@hono/node-server": ">=1.19.10",
+    "yauzl": ">=3.2.1"
+  }
+}

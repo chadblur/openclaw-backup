@@ -1,0 +1,19 @@
+{
+  "id": "openclaw-plugin-yuanbao",
+  "name": "元宝 Bot",
+  "description": "Tencent YuanBao intelligent bot channel plugin",
+  "version": "1.0.3",
+  "channels": [
+    "yuanbao"
+  ],
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "token": {
+        "type": "string",
+        "description": "Bot token"
+      }
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "name": "adp-openclaw",
+  "version": "0.0.69",
+  "description": "ADP-OpenClaw demo channel plugin (Go WebSocket backend)",
+  "type": "module",
+  "dependencies": {
+    "ws": "^8.16.0",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/ws": "^8.5.10",
+    "typescript": "^5.9.3"
+  },
+  "openclaw": {
+    "extensions": [
+      "./index.ts"
+    ],
+    "channel": {
+      "id": "adp-openclaw",
+      "label": "ADP-OpenClaw",
+      "selectionLabel": "ADP-OpenClaw",
+      "docsPath": "/channels/adp-openclaw",
+      "blurb": "ADP-OpenClaw channel backed by a Go WebSocket server.",
+      "order": 999
+    }
+  }
+}

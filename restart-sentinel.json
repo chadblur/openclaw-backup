@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "payload": {
+    "kind": "update",
+    "status": "error",
+    "ts": 1774261911116,
+    "sessionKey": "agent:pm:main",
+    "message": null,
+    "doctorHint": "Run: openclaw doctor --non-interactive",
+    "stats": {
+      "mode": "pnpm",
+      "root": "/root/.local/share/pnpm/global/5/.pnpm/openclaw@2026.3.11_@napi-rs+canvas@0.1.97_@types+express@5.0.6_node-llama-cpp@3.16.2/node_modules/openclaw",
+      "before": {
+        "version": "2026.3.11"
+      },
+      "after": {
+        "version": "2026.3.11"
+      },
+      "steps": [
+        {
+          "name": "global update",
+          "command": "pnpm add -g openclaw@latest",
+          "cwd": "/root/.local/share/pnpm/global/5/.pnpm/openclaw@2026.3.11_@napi-rs+canvas@0.1.97_@types+express@5.0.6_node-llama-cpp@3.16.2/node_modules/openclaw",
+          "durationMs": 426,
+          "log": {
+            "stdoutTail": " ERR_PNPM_NO_GLOBAL_BIN_DIR  Unable to find the global bin directory\n\nRun \"pnpm setup\" to create it automatically, or set the global-bin-dir setting, or the PNPM_HOME env variable. The global bin directory should be in the PATH.",
+            "stderrTail": null,
+            "exitCode": 1
+          }
+        }
+      ],
+      "reason": "global update",
+      "durationMs": 1091
+    }
+  }
+}
