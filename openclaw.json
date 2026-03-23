@@ -291,7 +291,18 @@
         "pm",
         "rd",
         "qa",
-        "ce"
+        "ce",
+        "taizi",
+        "zhongshu",
+        "menxia",
+        "shangshu",
+        "hubu",
+        "libu",
+        "bingbu",
+        "xingbu",
+        "gongbu",
+        "libu_hr",
+        "zaochao"
       ]
     }
   },

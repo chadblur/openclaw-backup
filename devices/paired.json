@@ -4,7 +4,7 @@
     "publicKey": "4vHfZGFyAy36WGdn5Id6jvj8VVQz1vDZCZomdlJwHsg",
     "platform": "linux",
     "clientId": "cli",
-    "clientMode": "probe",
+    "clientMode": "cli",
     "role": "operator",
     "roles": [
       "operator"
