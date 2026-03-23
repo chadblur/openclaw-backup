@@ -1,18 +1,33 @@
 {
   "task_id": "FEISHU-20260317-001",
   "reported_at": "2026-03-24T03:46:43+08:00",
-  "last_checked_at": "2026-03-24T03:56:43+08:00",
-  "source": "task_board_and_rd_session_history",
+  "last_checked_at": "2026-03-24T04:56:43+08:00",
+  "source": "rd_session_history_and_code_fingerprint",
   "session_key": "agent:rd:feishu:group:oc_e0b0bb9b0abdf7e6eda7eaac90a50c4f",
   "fingerprint": {
     "status": "completed_with_client_screenshot_confirmation",
     "task_board_status": "已完成",
+    "code": {
+      "mention_fallback": {
+        "path": "/root/.openclaw/extensions/openclaw-lark/src/messaging/outbound/mention-fallback.js",
+        "mtime": 1773763272.8179653,
+        "size": 3962,
+        "sha256": "b898cfd854efdc508fd293bd7469e39fdbfff4a5bec3aa713804d22b394f3aef"
+      },
+      "deliver": {
+        "path": "/root/.openclaw/extensions/openclaw-lark/src/messaging/outbound/deliver.js",
+        "mtime": 1773763144.1440203,
+        "size": 12319,
+        "sha256": "4271ed19caf5cc757422dda1774148a215aba6c3a12dbf3fe56ffca0bdbc8fc8"
+      }
+    },
     "evidence": [
-      "TASK_BOARD.md: 已收到客户端截图确认：现已可正常 @ 到研发，任务闭环",
-      "群消息已发送: om_x100b53327baa4ca0c11b2c64cf16242"
+      "此前状态文件记录：任务已闭环，且已完成群内同步",
+      "本次复查 RD 最近会话未出现新的完成/上线/需重启/已验证类增量进展",
+      "本次复查代码文件指纹可用，作为后续对比基线"
     ]
   },
-  "summary": "任务已闭环且此前已完成群内同步；本次复查看板状态仍为已完成，RD 最近会话也没有新的上线/验证类增量进展。",
+  "summary": "任务此前已闭环。本次 04:01 复查未发现新的 RD 增量进展，因此不重复发送群消息。",
   "last_check_result": "no_new_progress_since_closure_report",
   "action_taken": "no_group_message_sent"
 }
