@@ -8,7 +8,7 @@
       "name": "pm-progress-report-feishu-mentions",
       "enabled": true,
       "createdAtMs": 1773764029369,
-      "updatedAtMs": 1774648787438,
+      "updatedAtMs": 1774652254388,
       "schedule": {
         "kind": "every",
         "everyMs": 300000,
@@ -21,11 +21,11 @@
         "text": "【定期跟进提醒（每30分钟）】请PM检查任务 FEISHU-20260317-001（飞书@提及兜底：@ou_xxx→<at user_id=\"ou_xxx\"></at>）是否有进展；有进展则同步到飞书群 oc_e0b0bb9b0abdf7e6eda7eaac90a50c4f（用可点击@：<at user_id=\"ou_5886be9f5cacc19175f0913755010769\"></at> 等），无进展则不要发群消息。\n\n建议检查点（任选其一即可）：\n1) RD会话：sessions_history(sessionKey=\"agent:rd:feishu:group:oc_e0b0bb9b0abdf7e6eda7eaac90a50c4f\")，看是否出现“完成/已上线/需重启/已验证”等。\n2) 代码变更：对比 /root/.openclaw/extensions/openclaw-lark/src/messaging/outbound/mention-fallback.js 与 deliver.js 的 sha256 或 mtime。\n3) 运行态验证：如可，发一条测试消息到群（包含 @ou_xxx ）观察是否变成可点击@。\n\n状态文件：把上次已汇报的指纹写到 /root/.openclaw/workspace-pm/.progress/feishu-mention-fallback.json（若目录不存在则创建）。\n\n如需发群消息，用 message(action=send, channel=feishu, accountId=feishu-bot-pm, target=oc_e0b0bb9b0abdf7e6eda7eaac90a50c4f, message=<简短进展+下一步+ETA>)。发完后当前对话可 NO_REPLY。"
       },
       "state": {
-        "nextRunAtMs": 1774649077222,
-        "lastRunAtMs": 1774648777222,
+        "nextRunAtMs": 1774652545948,
+        "lastRunAtMs": 1774652245948,
         "lastRunStatus": "ok",
         "lastStatus": "ok",
-        "lastDurationMs": 10216,
+        "lastDurationMs": 8440,
         "lastDeliveryStatus": "not-requested",
         "consecutiveErrors": 0
       }
