@@ -1,0 +1,55 @@
+{
+  "name": "@tdai/memory-tdai",
+  "version": "0.1.2",
+  "description": "Four-layer local memory system plugin for OpenClaw — auto-captures, structures, and profiles conversational knowledge using local LLM + SQLite vector search (L0→L1→L2→L3 pipeline)",
+  "type": "module",
+  "main": "index.ts",
+  "exports": {
+    ".": "./index.ts"
+  },
+  "files": [
+    "index.ts",
+    "src/",
+    "openclaw.plugin.json",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "openclaw",
+    "openclaw-plugin",
+    "memory",
+    "ai-memory",
+    "long-term-memory",
+    "vector-search",
+    "sqlite-vec",
+    "llm",
+    "conversation",
+    "persona",
+    "scene-extraction",
+    "embedding"
+  ],
+  "author": "TDAI Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.16.0"
+  },
+  "dependencies": {
+    "@node-rs/jieba": "^2.0.1",
+    "node-llama-cpp": "^3.16.2",
+    "sqlite-vec": "0.1.7-alpha.2"
+  },
+  "peerDependencies": {
+    "openclaw": ">=2026.3.7"
+  },
+  "peerDependenciesMeta": {
+    "openclaw": {
+      "optional": true
+    }
+  },
+  "openclaw": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

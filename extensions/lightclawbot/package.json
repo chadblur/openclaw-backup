@@ -1,0 +1,57 @@
+{
+  "name": "lightclawbot",
+  "version": "1.1.1",
+  "description": "LightClawBot channel plugin with message support, cron jobs, and proactive messaging",
+  "type": "module",
+  "files": [
+    "dist",
+    "openclaw.plugin.json",
+    "skills"
+  ],
+  "openclaw": {
+    "extensions": [
+      "./dist/index.js"
+    ],
+    "channel": {
+      "id": "lightclawbot",
+      "label": "LightClawBot",
+      "selectionLabel": "LightClawBot",
+      "docsPath": "/docs/channels/lightclawbot",
+      "blurb": "Connect OpenClaw to LightClawBot via WebSocket long-connection",
+      "order": 60
+    },
+    "install": {
+      "npmSpec": "lightclawbot",
+      "defaultChoice": "npm"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build",
+    "deploy": "node scripts/deploy.cjs"
+  },
+  "license": "MIT",
+  "keywords": [
+    "openclaw",
+    "channel",
+    "plugin",
+    "lightclaw",
+    "lightclawbot",
+    "websocket",
+    "socket.io"
+  ],
+  "dependencies": {
+    "socket.io-client": "^4.7.4"
+  },
+  "bundledDependencies": [
+    "socket.io-client"
+  ],
+  "peerDependencies": {
+    "openclaw": ">=2026.3.22"
+  },
+  "devDependencies": {
+    "openclaw": "*",
+    "typescript": "^5.7.0"
+  }
+}

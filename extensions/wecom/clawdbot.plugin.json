@@ -1,0 +1,11 @@
+{
+  "id": "wecom",
+  "channels": ["wecom"],
+  "skills": ["./skills"],
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {}
+  }
+}
+

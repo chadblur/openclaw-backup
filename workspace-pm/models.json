@@ -118,7 +118,7 @@
       ]
     },
     "claudex.us.ci": {
-      "baseUrl": "https://code.claudex.us.ci",
+      "baseUrl": "https://code.claudex.us.ci/v1",
       "apiKey": "sk-ibtCYMmJ72RNaCc_3qIWn61nFYyN0h7mn0ZrfBX1BY88qVyRiemImBLhXys",
       "api": "openai-completions",
       "models": [
@@ -261,7 +261,7 @@
       ]
     },
     "daiju.live": {
-      "baseUrl": "https://api.daiju.live/",
+      "baseUrl": "https://api.daiju.live/v1",
       "apiKey": "sk-6kTeDDP2bOTHh6KBl5gZ0wmsAjCEyt0nzRopbxWyC4Z5ZPRN",
       "api": "openai-completions",
       "models": [

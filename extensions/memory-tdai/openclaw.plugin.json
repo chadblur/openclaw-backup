@@ -1,0 +1,81 @@
+{
+  "id": "memory-tdai",
+  "name": "Memory (TDAI)",
+  "description": "Four-layer memory system — auto-captures, structures, and profiles conversational knowledge",
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": true,
+    "properties": {
+      "capture": {
+        "type": "object",
+        "description": "对话自动捕获设置 (L0)",
+        "properties": {
+          "enabled": { "type": "boolean", "default": true, "description": "是否启用自动对话捕获" },
+          "excludeAgents": { "type": "array", "items": { "type": "string" }, "default": [], "description": "排除的 Agent glob 模式列表（如 bench-judge-*），匹配的 agent 不会被捕获、召回或参与 pipeline 调度" },
+          "l0l1RetentionDays": { "type": "number", "default": 0, "description": "L0/L1 本地文件保留天数（单位天）。0=不清理；非0时默认必须>=3。若为1或2，需显式开启 allowAggressiveCleanup" },
+          "allowAggressiveCleanup": { "type": "boolean", "default": false, "description": "是否允许高风险清理配置（l0l1RetentionDays=1或2）" },
+          "cleanTime": { "type": "string", "default": "03:00", "description": "每日清理执行时间（HH:mm）" },
+          "l0Dir": { "type": "string", "default": "conversations", "description": "L0 数据目录（相对插件数据目录）" },
+          "l1Dir": { "type": "string", "default": "records", "description": "L1 数据目录（相对插件数据目录）" }
+        }
+      },
+      "extraction": {
+        "type": "object",
+        "description": "记忆提取设置 (L1)",
+        "properties": {
+          "enabled": { "type": "boolean", "default": true, "description": "是否启用后台提取" },
+          "enableDedup": { "type": "boolean", "default": true, "description": "L1 智能去重（基于向量相似度冲突检测）" },
+          "maxMemoriesPerSession": { "type": "number", "default": 10, "description": "单次 L1 提取每 session 最大记忆条数" },
+          "model": { "type": "string", "description": "提取使用模型 (格式: provider/model)" }
+        }
+      },
+      "persona": {
+        "type": "object",
+        "description": "场景归纳与用户画像设置 (L2/L3)",
+        "properties": {
+          "triggerEveryN": { "type": "number", "default": 50, "description": "每 N 条新记忆触发画像生成" },
+          "maxScenes": { "type": "number", "default": 20, "description": "最大场景数" },
+          "backupCount": { "type": "number", "default": 3, "description": "画像备份保留数量" },
+          "sceneBackupCount": { "type": "number", "default": 10, "description": "场景块备份保留数量" },
+          "model": { "type": "string", "description": "画像生成模型 (格式: provider/model)" }
+        }
+      },
+      "pipeline": {
+        "type": "object",
+        "description": "L1→L2→L3 管线调度设置",
+        "properties": {
+          "everyNConversations": { "type": "number", "default": 5, "description": "每 N 轮对话触发 L1 批处理" },
+          "enableWarmup": { "type": "boolean", "default": true, "description": "Warm-up 模式：新 session 从 1 轮触发开始，每次 L1 后翻倍（1→2→4→...→everyN），加速早期记忆提取" },
+          "l1IdleTimeoutSeconds": { "type": "number", "default": 60, "description": "L1 空闲超时（秒）：用户停止对话后多久触发 L1 批处理" },
+          "l2DelayAfterL1Seconds": { "type": "number", "default": 90, "description": "L1 完成后延迟多久触发 L2（秒）" },
+          "l2MinIntervalSeconds": { "type": "number", "default": 300, "description": "同一 session 两次 L2 抽取的最小间隔（秒）" },
+          "l2MaxIntervalSeconds": { "type": "number", "default": 1800, "description": "同一活跃 session 的 L2 最大轮询间隔（秒）" },
+          "sessionActiveWindowHours": { "type": "number", "default": 24, "description": "session 活跃窗口（小时），超过此时间不活跃的 session 停止 L2 轮询" }
+        }
+      },
+      "recall": {
+        "type": "object",
+        "description": "记忆召回设置",
+        "properties": {
+          "enabled": { "type": "boolean", "default": true, "description": "是否启用自动召回" },
+          "maxResults": { "type": "number", "default": 5, "description": "召回最大结果数" },
+          "scoreThreshold": { "type": "number", "default": 0.3, "description": "最低分数阈值" },
+          "strategy": { "type": "string", "enum": ["embedding", "keyword", "hybrid"], "default": "hybrid", "description": "搜索策略：keyword(关键词)、embedding(向量)、hybrid(混合RRF融合，推荐)" }
+        }
+      },
+      "embedding": {
+        "type": "object",
+        "description": "向量搜索 (Embedding) 配置",
+        "properties": {
+          "enabled": { "type": "boolean", "default": true, "description": "是否启用向量搜索" },
+          "provider": { "type": "string", "default": "none", "description": "Embedding 服务提供者：填写兼容 OpenAI API 的远端服务名称（如 openai、deepseek 等）；不填或填 none 则禁用向量搜索" },
+          "baseUrl": { "type": "string", "description": "API Base URL（必填）：填写对应 provider 的 API 地址" },
+          "apiKey": { "type": "string", "description": "API Key（必填）" },
+          "model": { "type": "string", "description": "模型名称（必填）" },
+          "dimensions": { "type": "number", "description": "向量维度（必填，需与所选模型匹配）" },
+          "conflictRecallTopK": { "type": "number", "default": 5, "description": "冲突检测时召回 Top-K 数" }
+        }
+      }
+    }
+  }
+}

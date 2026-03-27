@@ -27,7 +27,7 @@
         ]
       },
       "claudex.us.ci": {
-        "baseUrl": "https://code.claudex.us.ci",
+        "baseUrl": "https://code.claudex.us.ci/v1",
         "apiKey": "<REDACTED>",
         "api": "openai-completions",
         "models": [
@@ -66,7 +66,7 @@
         ]
       },
       "daiju.live": {
-        "baseUrl": "https://api.daiju.live/",
+        "baseUrl": "https://api.daiju.live/v1",
         "apiKey": "<REDACTED>",
         "api": "openai-completions",
         "models": [
@@ -124,7 +124,7 @@
   "agents": {
     "defaults": {
       "model": {
-        "primary": "CLIProxy.103.180/gpt-5.4"
+        "primary": "daiju.live/claude-opus-4-6"
       },
       "workspace": "/root/.openclaw/workspace",
       "compaction": {
@@ -547,6 +547,10 @@
         "status": true
       },
       "threadSession": true
+    },
+    "lightclawbot": {
+      "enabled": true,
+      "apiKeys": "<REDACTED>"
     }
   },
   "gateway": {
@@ -587,7 +591,8 @@
       "discord",
       "openclaw-qqbot",
       "feishu",
-      "openclaw-weixin"
+      "openclaw-weixin",
+      "lightclawbot"
     ],
     "entries": {
       "feishu": {
@@ -604,6 +609,27 @@
       },
       "openclaw-qqbot": {
         "enabled": true
+      },
+      "ddingtalk": {
+        "enabled": true
+      },
+      "wecom": {
+        "enabled": true
+      },
+      "openclaw-plugin-yuanbao": {
+        "enabled": true
+      },
+      "openclaw-weixin": {
+        "enabled": true
+      },
+      "lightclawbot": {
+        "enabled": true
+      },
+      "adp-openclaw": {
+        "enabled": true
+      },
+      "memory-tdai": {
+        "enabled": false
       }
     },
     "installs": {
@@ -626,6 +652,55 @@
         "installPath": "/root/.openclaw/extensions/openclaw-qqbot",
         "version": "1.6.5",
         "installedAt": "2026-03-27T15:59:51.000Z"
+      },
+      "ddingtalk": {
+        "source": "npm",
+        "spec": "@largezhou/ddingtalk@2.0.1",
+        "installPath": "/root/.openclaw/extensions/ddingtalk",
+        "version": "2.0.1",
+        "installedAt": "2026-03-27T16:00:29.000Z"
+      },
+      "wecom": {
+        "source": "npm",
+        "spec": "@mocrane/wecom@2026.3.24",
+        "installPath": "/root/.openclaw/extensions/wecom",
+        "version": "2026.3.24",
+        "installedAt": "2026-03-27T16:01:16.000Z"
+      },
+      "openclaw-plugin-yuanbao": {
+        "source": "npm",
+        "spec": "openclaw-plugin-yuanbao@2.1.0",
+        "installPath": "/root/.openclaw/extensions/openclaw-plugin-yuanbao",
+        "version": "2.1.0",
+        "installedAt": "2026-03-27T16:02:04.000Z"
+      },
+      "openclaw-weixin": {
+        "source": "npm",
+        "spec": "@tencent-weixin/openclaw-weixin@2.0.1",
+        "installPath": "/root/.openclaw/extensions/openclaw-weixin",
+        "version": "2.0.1",
+        "installedAt": "2026-03-27T16:02:27.000Z"
+      },
+      "lightclawbot": {
+        "source": "npm",
+        "spec": "lightclawbot",
+        "installPath": "/root/.openclaw/extensions/lightclawbot",
+        "version": "1.1.1",
+        "installedAt": "2026-03-27T16:11:13.000Z"
+      },
+      "adp-openclaw": {
+        "source": "npm",
+        "spec": "adp-openclaw@0.0.71",
+        "installPath": "/root/.openclaw/extensions/adp-openclaw",
+        "version": "0.0.71",
+        "installedAt": "2026-03-27T16:02:39.000Z"
+      },
+      "memory-tdai": {
+        "source": "npm",
+        "spec": "@tdai/memory-tdai@0.1.2",
+        "installPath": "/root/.openclaw/extensions/memory-tdai",
+        "version": "0.1.2",
+        "installedAt": "2026-03-27T16:04:12.000Z"
       }
     }
   }
