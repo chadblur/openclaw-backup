@@ -10,7 +10,7 @@
 
 **Connect your AI assistant to QQ — private chat, group chat, and rich media, all in one plugin.**
 
-### 🚀 Current Version: `v1.6.2`
+### 🚀 Current Version: `v1.6.5`
 
 [![License](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
 [![QQ Bot](https://img.shields.io/badge/QQ_Bot-API_v2-red)](https://bot.q.qq.com/wiki/)
@@ -25,7 +25,7 @@
 
 Scan to join the QQ group chat
 
-<img width="300" height="540" alt="Clipboard_Screenshot_1773047715" src="https://github.com/user-attachments/assets/4d2d2337-229a-42ad-97ab-8a6d0607f296" />
+<img width="400" alt="QQ QR Code" src="./docs/images/developer_group.png" />
 
 
 </div>
@@ -36,13 +36,13 @@ Scan to join the QQ group chat
 
 | Feature | Description |
 |---------|-------------|
-| 🔒 **Multi-Scene** | C2C private chat, group @messages, channel messages, channel DMs |
+| 🔒 **Multi-Scene** | C2C private chat, group @messages |
 | 🖼️ **Rich Media** | Send & receive images, voice, video, and files |
 | 🎙️ **Voice (STT/TTS)** | Speech-to-text transcription & text-to-speech replies |
+| 🔥 **One-Click Hot Upgrade** | Send `/bot-upgrade` in private chat to upgrade — no server login needed |
 | ⏰ **Scheduled Push** | Proactive message delivery via scheduled tasks |
 | 🔗 **URL Support** | Direct URL sending in private chat (no restrictions) |
 | ⌨️ **Typing Indicator** | "Bot is typing..." status shown in real-time |
-| 🔄 **Hot Reload** | Install via npm with seamless hot updates |
 | 📝 **Markdown** | Full Markdown formatting support |
 | 🛠️ **Commands** | Native OpenClaw command integration |
 | 💬 **Quoted Context** | Resolve QQ `REFIDX_*` quoted messages and inject quote body into AI context |
@@ -163,7 +163,7 @@ Measures end-to-end latency from QQ server push to plugin response, broken down 
 
 > **You**: `/bot-version`
 >
-> **QQBot**: 🦞 Framework: OpenClaw 2026.3.13 (61d171a) / 🤖 Plugin: v1.6.2 / 🌟 GitHub repo
+> **QQBot**: 🦞 Framework: OpenClaw 2026.3.13 (61d171a) / 🤖 Plugin: v1.6.3 / 🌟 GitHub repo
 
 Shows framework version, plugin version, and a direct link to the official repository.
 
@@ -177,15 +177,17 @@ Shows framework version, plugin version, and a direct link to the official repos
 
 <img width="360" src="docs/images/slash-help.jpg" alt="Help Demo" />
 
-#### `/bot-upgrade` — Upgrade Guide
+#### `/bot-upgrade` — One-Click Hot Upgrade
 
 > **You**: `/bot-upgrade`
 >
-> **QQBot**: 📌 Current version / ✅ Up to date / ⬆️ Upgrade guide / 🌟 GitHub repo
+> **QQBot**: 📌 Current: v1.6.3 / ✅ New version v1.6.4 available / Click button below to confirm
 
-Shows current version, update status, upgrade guide link, and official repository.
+Credentials are automatically backed up before upgrade. Version existence is verified against npm before proceeding. Auto-recovery on failure.
 
-<img width="360" src="docs/images/slash-upgrade.jpg" alt="Upgrade Demo" /> 
+> ⚠️ Hot upgrade is currently not supported on Windows. Sending `/bot-upgrade` on Windows will return a manual upgrade guide instead.
+
+<img width="360" src="docs/images/hot-update.jpg" alt="Hot Upgrade Demo" />
 
 #### `/bot-logs` — Log Export
 
@@ -196,6 +198,14 @@ Shows current version, update status, upgrade guide link, and official repositor
 Exports the last ~2000 lines of gateway logs as a file for quick troubleshooting.
 
 <img width="360" src="docs/images/slash-logs.jpg" alt="Logs Demo" />
+
+#### Usage Help
+
+All commands support a `?` suffix to show usage:
+
+> **You**: `/bot-upgrade ?`
+>
+> **QQBot**: 📖 /bot-upgrade usage: …
 
 ---
 
@@ -430,6 +440,26 @@ STT supports two-level configuration with priority fallback:
 - [Upgrade Guide](docs/UPGRADE_GUIDE.md) — full upgrade paths and migration notes
 - [Command Reference](docs/commands.md) — OpenClaw CLI commands
 - [Changelog](CHANGELOG.md) — release notes
+
+## 🤝 Contributors
+
+Thanks to all the developers who have contributed to this project!
+
+<a href="https://github.com/tencent-connect/openclaw-qqbot/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=tencent-connect/openclaw-qqbot" />
+</a>
+
+## 💖 Acknowledgements
+
+Special thanks to [@sliverp](https://github.com/sliverp) for outstanding contributions to the project!
+
+<a href="https://github.com/sliverp"><img src="https://avatars.githubusercontent.com/u/38134380?v=4" width="48" height="48" alt="sliverp" title="sliverp"/></a>
+
+Thanks to [Tencent Cloud Lighthouse](https://cloud.tencent.com/product/lighthouse) for the deep collaboration. For raising crawfish, choose Tencent Cloud Lighthouse!
+
+<a href="https://cloud.tencent.com/product/lighthouse">
+  <img alt="Tencent Cloud Lighthouse" src="./docs/images/lighthouse_head.png" height="500" style="max-width:80%; height:auto;"/>
+</a>
 
 ## ⭐ Star History
 

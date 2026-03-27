@@ -1,9 +1,0 @@
-{
-  "id": "adp-openclaw",
-  "channels": ["adp-openclaw"],
-  "configSchema": {
-    "type": "object",
-    "additionalProperties": false,
-    "properties": {}
-  }
-}

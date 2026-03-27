@@ -26,6 +26,76 @@
           }
         ]
       },
+      "claudex.us.ci": {
+        "baseUrl": "https://code.claudex.us.ci",
+        "apiKey": "<REDACTED>",
+        "api": "openai-completions",
+        "models": [
+          {
+            "id": "gpt-5.4",
+            "name": "gpt-5.4"
+          },
+          {
+            "id": "gpt-5.3-codex",
+            "name": "gpt-5.3-codex"
+          },
+          {
+            "id": "gpt-5.2",
+            "name": "gpt-5.2"
+          },
+          {
+            "id": "gpt-5.2-codex",
+            "name": "gpt-5.2-codex"
+          },
+          {
+            "id": "101/anthropic/claude-sonnet-4.6",
+            "name": "101/anthropic/claude-sonnet-4.6"
+          },
+          {
+            "id": "MiniMax-M2.5",
+            "name": "MiniMax-M2.5"
+          },
+          {
+            "id": "grok-4.20-fast",
+            "name": "grok-4.20-fast"
+          },
+          {
+            "id": "grok-imagine-1.0-video",
+            "name": "grok-imagine-1.0-video"
+          }
+        ]
+      },
+      "daiju.live": {
+        "baseUrl": "https://api.daiju.live/",
+        "apiKey": "<REDACTED>",
+        "api": "openai-completions",
+        "models": [
+          {
+            "id": "claude-opus-4-6",
+            "name": "claude-opus-4-6"
+          },
+          {
+            "id": "claude-sonnet-4-6",
+            "name": "claude-sonnet-4-6"
+          },
+          {
+            "id": "gpt-5.4",
+            "name": "gpt-5.4"
+          },
+          {
+            "id": "gpt-5.3-codex",
+            "name": "gpt-5.3-codex"
+          },
+          {
+            "id": "gpt-5.2",
+            "name": "gpt-5.2"
+          },
+          {
+            "id": "gpt-5.2-codex",
+            "name": "gpt-5.2-codex"
+          }
+        ]
+      },
       "CLIProxy.103.180": {
         "baseUrl": "http://38.123.103.180:8317/v1",
         "apiKey": "<REDACTED>",
@@ -534,21 +604,6 @@
       },
       "openclaw-qqbot": {
         "enabled": true
-      },
-      "ddingtalk": {
-        "enabled": true
-      },
-      "wecom": {
-        "enabled": true
-      },
-      "adp-openclaw": {
-        "enabled": true
-      },
-      "openclaw-plugin-yuanbao": {
-        "enabled": true
-      },
-      "openclaw-weixin": {
-        "enabled": true
       }
     },
     "installs": {
@@ -567,45 +622,10 @@
       },
       "openclaw-qqbot": {
         "source": "npm",
-        "spec": "@tencent-connect/openclaw-qqbot@1.6.3",
+        "spec": "@tencent-connect/openclaw-qqbot@1.6.5",
         "installPath": "/root/.openclaw/extensions/openclaw-qqbot",
-        "version": "1.6.3",
-        "installedAt": "2026-03-23T09:15:02.000Z"
-      },
-      "ddingtalk": {
-        "source": "npm",
-        "spec": "@largezhou/ddingtalk",
-        "installPath": "/root/.openclaw/extensions/ddingtalk",
-        "version": "1.4.2",
-        "installedAt": "2026-03-23T09:15:12.000Z"
-      },
-      "wecom": {
-        "source": "npm",
-        "spec": "@mocrane/wecom",
-        "installPath": "/root/.openclaw/extensions/wecom",
-        "version": "2026.3.20",
-        "installedAt": "2026-03-23T09:15:49.000Z"
-      },
-      "adp-openclaw": {
-        "source": "npm",
-        "spec": "adp-openclaw",
-        "installPath": "/root/.openclaw/extensions/adp-openclaw",
-        "version": "0.0.69",
-        "installedAt": "2026-03-23T09:15:53.000Z"
-      },
-      "openclaw-plugin-yuanbao": {
-        "source": "npm",
-        "spec": "openclaw-plugin-yuanbao@1.0.3",
-        "installPath": "/root/.openclaw/extensions/openclaw-plugin-yuanbao",
-        "version": "1.0.3",
-        "installedAt": "2026-03-23T09:15:59.000Z"
-      },
-      "openclaw-weixin": {
-        "source": "npm",
-        "spec": "@tencent-weixin/openclaw-weixin",
-        "installPath": "/root/.openclaw/extensions/openclaw-weixin",
-        "version": "1.0.2",
-        "installedAt": "2026-03-23T09:16:04.000Z"
+        "version": "1.6.5",
+        "installedAt": "2026-03-27T15:59:51.000Z"
       }
     }
   }

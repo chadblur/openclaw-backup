@@ -9,7 +9,7 @@
 
 **让你的 AI 助手接入 QQ — 私聊、群聊、富媒体，一个插件全搞定。**
 
-### 🚀 当前版本： `v1.6.2`
+### 🚀 当前版本： `v1.6.5`
 
 [![License](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
 [![QQ Bot](https://img.shields.io/badge/QQ_Bot-API_v2-red)](https://bot.q.qq.com/wiki/)
@@ -21,7 +21,7 @@
 
 扫描二维码加入群聊，一起交流
 
-<img width="316" height="410" alt="QQ 群二维码" src="https://github.com/user-attachments/assets/d079ba89-ecd0-437f-9e66-92319801a325" />
+<img width="400" alt="QQ 群二维码" src="./docs/images/developer_group.png" />
 
 </div>
 
@@ -31,13 +31,13 @@
 
 | 功能 | 说明 |
 |------|------|
-| 🔒 **多场景支持** | C2C 私聊、群聊 @消息、频道消息、频道私信 |
+| 🔒 **多场景支持** | C2C 私聊、群聊 @消息 |
 | 🖼️ **富媒体消息** | 支持图片、语音、视频、文件的收发 |
 | 🎙️ **语音能力 (STT/TTS)** | 语音转文字自动转录 & 文字转语音回复 |
+| 🔥 **一键热更新** | 私聊发送 `/bot-upgrade` 即可完成版本升级，无需登录服务器 |
 | ⏰ **定时推送** | 支持定时任务触发后主动推送消息 |
 | 🔗 **URL 无限制** | 私聊可直接发送 URL |
 | ⌨️ **输入状态** | 实时显示"Bot 正在输入中…"状态 |
-| 🔄 **热更新** | 支持 npm 方式安装和无缝热更新 |
 | 📝 **Markdown** | 完整支持 Markdown 格式消息 |
 | 🛠️ **原生命令** | 支持 OpenClaw 原生命令 |
 | 💬 **引用上下文** | 解析 QQ `REFIDX_*` 引用消息，并将引用内容注入 AI 上下文 |
@@ -158,7 +158,7 @@ AI 可直接发送视频，支持本地文件和公网 URL。
 
 > **你**：`/bot-version`
 >
-> **QQBot**：🦞框架版本：OpenClaw 2026.3.13 (61d171a) / 🤖QQBot 插件版本：v1.6.2 / 🌟官方 GitHub 仓库
+> **QQBot**：🦞框架版本：OpenClaw 2026.3.13 (61d171a) / 🤖QQBot 插件版本：v1.6.3 / 🌟官方 GitHub 仓库
 
 一目了然查看框架版本、插件版本，并可直接跳转官方仓库。
 
@@ -172,15 +172,17 @@ AI 可直接发送视频，支持本地文件和公网 URL。
 
 <img width="360" src="docs/images/slash-help.jpg" alt="Help 演示" />
 
-#### `/bot-upgrade` — 升级指引
+#### `/bot-upgrade` — 一键热更新
 
 > **你**：`/bot-upgrade`
 >
-> **QQBot**：📌当前版本 / ✅当前已是最新版本 / ⬆️升级指引 / 🌟官方 GitHub 仓库
+> **QQBot**：📌当前版本 v1.6.3 / ✅发现新版本 v1.6.4 / 点击下方按钮确认升级
 
-显示当前版本、更新状态、升级文档链接及官方仓库入口。
+升级流程自动备份凭证，升级前校验版本是否存在于 npm，升级失败自动恢复。
 
-<img width="360" src="docs/images/slash-upgrade.jpg" alt="Upgrade 演示" /> 
+> ⚠️ 热更新指令暂不支持 Windows 系统，在 Windows 上发送 `/bot-upgrade` 会返回手动升级指引。
+
+<img width="360" src="docs/images/hot-update.jpg" alt="一键热更新演示" />
 
 #### `/bot-logs` — 日志导出
 
@@ -191,6 +193,14 @@ AI 可直接发送视频，支持本地文件和公网 URL。
 导出最近约 2000 行网关日志为文件，方便快速排查问题。
 
 <img width="360" src="docs/images/slash-logs.jpg" alt="Logs 演示" />
+
+#### 用法查询
+
+所有指令都支持 `?` 后缀查看用法说明：
+
+> **你**：`/bot-upgrade ?`
+>
+> **QQBot**：📖 /bot-upgrade 用法：…
 
 ---
 
@@ -425,6 +435,26 @@ STT 支持两级配置，按优先级查找：
 - [升级指南](docs/UPGRADE_GUIDE.zh.md) — 完整升级路径与迁移说明
 - [命令参考](docs/commands.md) — OpenClaw CLI 常用命令
 - [更新日志](CHANGELOG.md) — 各版本变更记录
+
+## 🤝 贡献者
+
+感谢所有为本项目做出贡献的开发者！
+
+<a href="https://github.com/tencent-connect/openclaw-qqbot/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=tencent-connect/openclaw-qqbot" />
+</a>
+
+## 💖 致谢
+
+特别感谢 [@sliverp](https://github.com/sliverp) 对项目的核心贡献！
+
+<a href="https://github.com/sliverp"><img src="https://avatars.githubusercontent.com/u/38134380?v=4" width="48" height="48" alt="sliverp" title="sliverp"/></a>
+
+感谢[腾讯云Lighthouse](https://cloud.tencent.com/product/lighthouse)的深度合作，养小龙虾，首选腾讯云Lighthouse！
+
+<a href="https://cloud.tencent.com/product/lighthouse">
+  <img alt="腾讯云 Lighthouse" src="./docs/images/lighthouse_head.png" height="500" style="max-width:80%; height:auto;"/>
+</a>
 
 ## ⭐ Star History
 
