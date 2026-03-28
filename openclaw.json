@@ -1093,10 +1093,10 @@
           "connectionMode": "websocket",
           "domain": "feishu",
           "groupPolicy": "open",
-          "allowBots": "mentions",
+          "allowBots": true,
           "groups": {
             "*": {
-              "requireMention": true,
+              "requireMention": false,
               "allowBots": true
             }
           }
