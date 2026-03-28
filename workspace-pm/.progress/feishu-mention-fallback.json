@@ -1,7 +1,7 @@
 {
   "task_id": "FEISHU-20260317-001",
   "reported_at": "2026-03-24T03:46:43+08:00",
-  "last_checked_at": "2026-03-28T15:21:41+08:00",
+  "last_checked_at": "2026-03-29T04:56:46+08:00",
   "source": "rd_session_history",
   "session_key": "agent:rd:feishu:group:oc_e0b0bb9b0abdf7e6eda7eaac90a50c4f",
   "fingerprint": {
@@ -23,18 +23,18 @@
     },
     "current_check": {
       "method": "rd_session_history",
-      "rd_recent_result": "new_chat_activity_but_no_completion_or_restart_signal",
-      "latest_rd_visible_message_at": "2026-03-28T15:16:18+08:00",
+      "rd_recent_result": "no_new_completion_or_verification_signal",
+      "latest_rd_visible_message_at": "2026-03-28T15:30:40+08:00",
       "long_stale": true
     },
     "evidence": [
-      "此前状态文件记录：任务已闭环，且已完成群内同步",
-      "本次复查未看到新的完成/已上线/需重启/已验证类增量进展",
-      "RD 会话在 2026-03-28 15:16 有新互动，但内容是要求补充任务 ID/派发信息，不构成该任务的新交付进展",
-      "按 HEARTBEAT 规则，该任务仍满足‘任务已派发但长期无进展’的异常触发条件"
+      "本轮 RD 会话复查未看到‘完成/已上线/需重启/已验证’类新增结论",
+      "最新可见互动仍是 2026-03-28 15:30 对其他任务 WEB-20260317-001 的追问，不构成 FEISHU-20260317-001 的新进展",
+      "相较上轮未出现新的任务交付、验证结果或重启说明",
+      "未满足‘有新增有效进展才发群消息’条件"
     ]
   },
-  "summary": "本轮看到 RD 会话有新互动，但不是 FEISHU-20260317-001 的有效推进进展，因此不重复发送群消息；该任务仍处于长期无新回报状态。",
-  "last_check_result": "no_new_progress_since_closure_report",
+  "summary": "本轮检查未发现 FEISHU-20260317-001 新增有效进展，因此不发群消息。",
+  "last_check_result": "no_new_progress",
   "action_taken": "no_group_message_sent"
 }
