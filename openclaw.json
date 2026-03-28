@@ -190,13 +190,56 @@
             "name": "gpt-5.2-codex"
           }
         ]
+      },
+      "qwencode": {
+        "baseUrl": "https://coding.dashscope.aliyuncs.com/v1",
+        "apiKey": "<REDACTED>",
+        "api": "openai-completions",
+        "models": [
+          {
+            "id": "qwen3.5-plus",
+            "name": "Qwen3.5 Plus",
+            "input": [
+              "text",
+              "image"
+            ]
+          },
+          {
+            "id": "qwen3-max-2026-01-23",
+            "name": "Qwen3 Max"
+          },
+          {
+            "id": "qwen3-coder-plus",
+            "name": "Qwen3 Coder Plus"
+          },
+          {
+            "id": "MiniMax-M2.5",
+            "name": "MiniMax M2.5"
+          },
+          {
+            "id": "kimi-k2.5",
+            "name": "Kimi K2.5",
+            "input": [
+              "text",
+              "image"
+            ]
+          },
+          {
+            "id": "glm-5",
+            "name": "GLM-5"
+          },
+          {
+            "id": "glm-4.7",
+            "name": "GLM-4.7"
+          }
+        ]
       }
     }
   },
   "agents": {
     "defaults": {
       "model": {
-        "primary": "ethan010203/gpt-5.4"
+        "primary": "qwencode/qwen3.5-plus"
       },
       "workspace": "/root/.openclaw/workspace",
       "compaction": {
