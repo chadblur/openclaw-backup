@@ -264,6 +264,9 @@
       "baseUrl": "https://api.daiju.live/v1",
       "apiKey": "sk-6kTeDDP2bOTHh6KBl5gZ0wmsAjCEyt0nzRopbxWyC4Z5ZPRN",
       "api": "openai-completions",
+      "headers": {
+        "User-Agent": "Mozilla/5.0"
+      },
       "models": [
         {
           "id": "claude-opus-4-6",

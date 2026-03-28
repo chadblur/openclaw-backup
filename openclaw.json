@@ -69,6 +69,9 @@
         "baseUrl": "https://api.daiju.live/v1",
         "apiKey": "<REDACTED>",
         "api": "openai-completions",
+        "headers": {
+          "User-Agent": "Mozilla/5.0"
+        },
         "models": [
           {
             "id": "claude-opus-4-6",
@@ -586,7 +589,6 @@
   },
   "plugins": {
     "allow": [
-      "openclaw-lark",
       "telegram",
       "discord",
       "openclaw-qqbot",
@@ -602,9 +604,6 @@
         "enabled": true
       },
       "discord": {
-        "enabled": true
-      },
-      "openclaw-lark": {
         "enabled": true
       },
       "openclaw-qqbot": {
