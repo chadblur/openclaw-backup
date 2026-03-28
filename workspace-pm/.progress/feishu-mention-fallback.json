@@ -1,7 +1,7 @@
 {
   "task_id": "FEISHU-20260317-001",
   "reported_at": "2026-03-24T03:46:43+08:00",
-  "last_checked_at": "2026-03-28T14:46:41+08:00",
+  "last_checked_at": "2026-03-28T15:21:41+08:00",
   "source": "rd_session_history",
   "session_key": "agent:rd:feishu:group:oc_e0b0bb9b0abdf7e6eda7eaac90a50c4f",
   "fingerprint": {
@@ -23,18 +23,18 @@
     },
     "current_check": {
       "method": "rd_session_history",
-      "rd_recent_result": "no_new_completion_or_restart_signal_found",
-      "latest_rd_visible_message_at": "2026-03-23T18:13:40+08:00",
+      "rd_recent_result": "new_chat_activity_but_no_completion_or_restart_signal",
+      "latest_rd_visible_message_at": "2026-03-28T15:16:18+08:00",
       "long_stale": true
     },
     "evidence": [
       "此前状态文件记录：任务已闭环，且已完成群内同步",
-      "本次复查 RD 最近会话未出现新的完成/已上线/需重启/已验证类增量进展",
-      "最近可见 RD 会话仍停留在 2026-03-23 的接收/说明口径，没有新的上线或验证回报",
-      "按 HEARTBEAT 规则，该任务已满足‘任务已派发但长期无进展’的异常触发条件"
+      "本次复查未看到新的完成/已上线/需重启/已验证类增量进展",
+      "RD 会话在 2026-03-28 15:16 有新互动，但内容是要求补充任务 ID/派发信息，不构成该任务的新交付进展",
+      "按 HEARTBEAT 规则，该任务仍满足‘任务已派发但长期无进展’的异常触发条件"
     ]
   },
-  "summary": "任务此前已闭环。本次复查未发现新的 RD 增量进展，因此不重复发送群消息；但该任务已长期无新回报，应提醒责任 Agent 并记录风险。",
+  "summary": "本轮看到 RD 会话有新互动，但不是 FEISHU-20260317-001 的有效推进进展，因此不重复发送群消息；该任务仍处于长期无新回报状态。",
   "last_check_result": "no_new_progress_since_closure_report",
   "action_taken": "no_group_message_sent"
 }

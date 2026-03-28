@@ -173,7 +173,7 @@
   "agents": {
     "defaults": {
       "model": {
-        "primary": "ethan010203/gpt-5.4"
+        "primary": "claudex.us.ci/gpt-5.4"
       },
       "workspace": "/root/.openclaw/workspace",
       "compaction": {
