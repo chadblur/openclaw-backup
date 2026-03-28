@@ -629,8 +629,8 @@
       "api": "openai-completions",
       "models": [
         {
-          "id": "qwen3.5-plus",
-          "name": "Qwen3.5 Plus",
+          "id": "qwen3.5-plus-2026-02-15",
+          "name": "Qwen3.5 Plus-2026-02-15",
           "input": [
             "text",
             "image"
@@ -752,7 +752,7 @@
       ]
     },
     "ice.v.ua": {
-      "baseUrl": "https://ice.v.ua",
+      "baseUrl": "https://ice.v.ua/v1",
       "apiKey": "sk-bd49bb06d7c332be46caeeef39c0bb8d922231e5383c5b5fbbf498249c076dd6",
       "api": "openai-completions",
       "models": [
