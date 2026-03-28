@@ -49,6 +49,29 @@
           }
         ]
       },
+      "dgbmc": {
+        "baseUrl": "https://freeapi.dgbmc.top/v1",
+        "apiKey": "<REDACTED>",
+        "api": "openai-completions",
+        "models": [
+          {
+            "id": "gpt-5.4",
+            "name": "gpt-5.4"
+          },
+          {
+            "id": "gpt-5.3-codex",
+            "name": "gpt-5.3-codex"
+          },
+          {
+            "id": "gpt-5.2",
+            "name": "gpt-5.2"
+          },
+          {
+            "id": "gpt-5.2-codex",
+            "name": "gpt-5.2-codex"
+          }
+        ]
+      },
       "claudex.us.ci": {
         "baseUrl": "https://code.claudex.us.ci/v1",
         "apiKey": "<REDACTED>",
@@ -150,7 +173,7 @@
   "agents": {
     "defaults": {
       "model": {
-        "primary": "claudex.us.ci/gpt-5.4"
+        "primary": "ethan010203/gpt-5.4"
       },
       "workspace": "/root/.openclaw/workspace",
       "compaction": {
