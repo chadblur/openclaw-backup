@@ -12,6 +12,8 @@
  * - `group_message_type`: "chat" | "thread" (only for chat_mode=group)
  */
 import type { ClawdbotConfig } from 'openclaw/plugin-sdk';
+/** @internal Called by lark-client.ts at module init time. */
+export declare function injectLarkClient(cls: any): void;
 export interface ChatInfo {
     chatMode: 'group' | 'topic' | 'p2p';
     groupMessageType?: 'chat' | 'thread';

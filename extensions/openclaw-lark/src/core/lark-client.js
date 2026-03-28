@@ -14,27 +14,64 @@
  *   - `LarkClient.fromCredentials(credentials)` — ephemeral instance (not cached)
  */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import * as Lark from '@larksuiteoapi/node-sdk';
-import { getLarkAccount } from './accounts';
-import { clearUserNameCache } from '../messaging/inbound/user-name-cache';
-import { clearChatInfoCache } from './chat-info-cache';
-import { getUserAgent } from './version';
-import { larkLogger } from './lark-logger';
-const log = larkLogger('core/lark-client');
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.LarkClient = void 0;
+exports.getResolvedConfig = getResolvedConfig;
+const Lark = __importStar(require("@larksuiteoapi/node-sdk"));
+const accounts_1 = require("./accounts.js");
+// NOTE: clearUserNameCache is lazy-imported in clearCache() to break a
+// circular dependency with user-name-cache.ts (which imports LarkClient).
+const chat_info_cache_1 = require("./chat-info-cache.js");
+const version_1 = require("./version.js");
+const lark_logger_1 = require("./lark-logger.js");
+const log = (0, lark_logger_1.larkLogger)('core/lark-client');
 // ---------------------------------------------------------------------------
 // 注入 User-Agent 到所有飞书 SDK 请求
 // ---------------------------------------------------------------------------
 const GLOBAL_LARK_USER_AGENT_KEY = 'LARK_USER_AGENT';
 function installGlobalUserAgent() {
     // node-sdk 内置拦截器最终会读取 global.LARK_USER_AGENT 并覆盖 User-Agent
-    globalThis[GLOBAL_LARK_USER_AGENT_KEY] = getUserAgent();
+    globalThis[GLOBAL_LARK_USER_AGENT_KEY] = (0, version_1.getUserAgent)();
 }
 installGlobalUserAgent();
 Lark.defaultHttpInstance.interceptors.request.handlers = [];
 // 使用 interceptors 在所有 HTTP 请求中注入 User-Agent header
 Lark.defaultHttpInstance.interceptors.request.use((req) => {
     if (req.headers) {
-        req.headers['User-Agent'] = getUserAgent();
+        req.headers['User-Agent'] = (0, version_1.getUserAgent)();
     }
     return req;
 }, undefined, { synchronous: true });
@@ -54,7 +91,39 @@ function resolveBrand(brand) {
 // ---------------------------------------------------------------------------
 /** Instance cache keyed by accountId. */
 const cache = new Map();
-export class LarkClient {
+/**
+ * Compare two SecretRef-shaped objects by their identity fields.
+ * Key-order independent, unlike JSON.stringify.
+ */
+function secretRefsEqual(a, b) {
+    return a.source === b.source && a.provider === b.provider && a.id === b.id;
+}
+/**
+ * Compare two credential values that may be strings or SecretRef objects.
+ *
+ * - Both strings: direct `===`.
+ * - Both SecretRef objects: compare `source`, `provider`, `id` explicitly.
+ * - Mixed (string vs SecretRef): treat as equal — the platform resolves the
+ *   SecretRef at startup (producing the cached string) but `loadConfig()`
+ *   returns the raw object on subsequent calls.  Detecting SecretRef identity
+ *   changes is not useful here because the platform does not re-resolve
+ *   feishu secrets on reload, so a new SecretRef would be equally unusable.
+ */
+function credentialsEqual(a, b) {
+    if (a === b)
+        return true;
+    if (typeof a === 'string' && typeof b === 'string')
+        return false;
+    if (a && b && typeof a === 'object' && typeof b === 'object') {
+        return secretRefsEqual(a, b);
+    }
+    // Mixed types: keep the cached instance that holds the working string.
+    if ((typeof a === 'string' && b && typeof b === 'object') || (typeof b === 'string' && a && typeof a === 'object')) {
+        return true;
+    }
+    return false;
+}
+class LarkClient {
     account;
     _sdk = null;
     _wsClient = null;
@@ -104,7 +173,7 @@ export class LarkClient {
     // ---- Static factory / cache ------------------------------------------------
     /** Resolve account from config and return a cached `LarkClient`. */
     static fromCfg(cfg, accountId) {
-        return LarkClient.fromAccount(getLarkAccount(cfg, accountId));
+        return LarkClient.fromAccount((0, accounts_1.getLarkAccount)(cfg, accountId));
     }
     /**
      * Get (or create) a cached `LarkClient` for the given account.
@@ -112,7 +181,7 @@ export class LarkClient {
      */
     static fromAccount(account) {
         const existing = cache.get(account.accountId);
-        if (existing && existing.account.appId === account.appId && existing.account.appSecret === account.appSecret) {
+        if (existing && existing.account.appId === account.appId && credentialsEqual(existing.account.appSecret, account.appSecret)) {
             return existing;
         }
         // Credentials changed — tear down the stale instance before replacing it.
@@ -150,17 +219,18 @@ export class LarkClient {
      * With `accountId` — dispose that single instance.
      * Without — dispose every cached instance and clear the cache.
      */
-    static clearCache(accountId) {
+    static async clearCache(accountId) {
+        const { clearUserNameCache } = await Promise.resolve().then(() => __importStar(require('../messaging/inbound/user-name-cache.js')));
         if (accountId !== undefined) {
             cache.get(accountId)?.dispose();
             clearUserNameCache(accountId);
-            clearChatInfoCache(accountId);
+            (0, chat_info_cache_1.clearChatInfoCache)(accountId);
         }
         else {
             for (const inst of cache.values())
                 inst.dispose();
             clearUserNameCache();
-            clearChatInfoCache();
+            (0, chat_info_cache_1.clearChatInfoCache)();
         }
     }
     // ---- SDK client (lazy) -----------------------------------------------------
@@ -350,5 +420,34 @@ export class LarkClient {
                 reject(err);
             }
         });
+    }
+}
+exports.LarkClient = LarkClient;
+// Inject LarkClient reference into chat-info-cache to break the circular
+// dependency (chat-info-cache needs LarkClient.fromCfg but lark-client
+// imports clearChatInfoCache from chat-info-cache).
+(0, chat_info_cache_1.injectLarkClient)(LarkClient);
+// ---------------------------------------------------------------------------
+// Config resolution helper
+// ---------------------------------------------------------------------------
+/**
+ * Returns the freshest available config for account resolution.
+ *
+ * The `config` object captured in tool-registration closures may be stale
+ * after a hot-reload: openclaw re-initialises the runtime but the plugin
+ * closure still holds the old snapshot.  Calling
+ * `LarkClient.runtime.config.loadConfig()` always returns the current live
+ * config, so account lookups pick up any changes made since plugin load.
+ *
+ * @param fallback - Config to use when the runtime is not yet initialised
+ *   (e.g. during early startup before the first `LarkClient.runtime` attach).
+ */
+function getResolvedConfig(fallback) {
+    try {
+        return LarkClient.runtime.config.loadConfig();
+    }
+    catch {
+        // runtime not yet initialised — fall back to passed config
+        return fallback;
     }
 }

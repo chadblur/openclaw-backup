@@ -14,22 +14,25 @@
  * - dispatch-builders.ts — pure payload/body/envelope construction
  * - dispatch-commands.ts — system command & permission notification
  */
-import { clearHistoryEntriesIfEnabled } from 'openclaw/plugin-sdk';
-import { larkLogger } from '../../core/lark-logger';
-import { ticketElapsed } from '../../core/lark-ticket';
-import { createFeishuReplyDispatcher } from '../../card/reply-dispatcher';
-import { mentionedBot } from './mention';
-import { buildQueueKey, threadScopedKey, registerActiveDispatcher, unregisterActiveDispatcher, } from '../../channel/chat-queue';
-import { isLikelyAbortText } from '../../channel/abort-detect';
-import { buildDispatchContext, resolveThreadSessionKey } from './dispatch-context';
-import { buildMessageBody, buildBodyForAgent, buildInboundPayload, buildEnvelopeWithHistory, } from './dispatch-builders';
-import { dispatchPermissionNotification, dispatchSystemCommand } from './dispatch-commands';
-import { encodeFeishuRouteTarget } from '../../core/targets';
-import { runFeishuDoctorI18n } from '../../commands/doctor';
-import { runFeishuAuthI18n } from '../../commands/auth';
-import { runFeishuStartI18n, getFeishuHelpI18n } from '../../commands/index';
-import { sendCardFeishu, buildI18nMarkdownCard, sendMessageFeishu } from '../outbound/send';
-const log = larkLogger('inbound/dispatch');
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.dispatchToAgent = dispatchToAgent;
+const reply_history_1 = require("openclaw/plugin-sdk/reply-history");
+const lark_logger_1 = require("../../core/lark-logger.js");
+const lark_ticket_1 = require("../../core/lark-ticket.js");
+const reply_dispatcher_1 = require("../../card/reply-dispatcher.js");
+const mention_1 = require("./mention.js");
+const chat_queue_1 = require("../../channel/chat-queue.js");
+const abort_detect_1 = require("../../channel/abort-detect.js");
+const dispatch_context_1 = require("./dispatch-context.js");
+const chat_info_cache_1 = require("../../core/chat-info-cache.js");
+const dispatch_builders_1 = require("./dispatch-builders.js");
+const dispatch_commands_1 = require("./dispatch-commands.js");
+const targets_1 = require("../../core/targets.js");
+const doctor_1 = require("../../commands/doctor.js");
+const auth_1 = require("../../commands/auth.js");
+const index_1 = require("../../commands/index.js");
+const send_1 = require("../outbound/send.js");
+const log = (0, lark_logger_1.larkLogger)('inbound/dispatch');
 // ---------------------------------------------------------------------------
 // Internal: normal message dispatch
 // ---------------------------------------------------------------------------
@@ -45,15 +48,16 @@ async function dispatchNormalMessage(dc, ctxPayload, chatHistories, historyKey, 
     // Abort messages should never create streaming cards — dispatch via the
     // plain-text system-command path so the SDK's abort handler can reply
     // without touching CardKit.
-    if (isLikelyAbortText(dc.ctx.content?.trim() ?? '')) {
+    if ((0, abort_detect_1.isLikelyAbortText)(dc.ctx.content?.trim() ?? '')) {
         dc.log(`feishu[${dc.account.accountId}]: abort message detected, using plain-text dispatch`);
         log.info('abort message detected, using plain-text dispatch');
-        await dispatchSystemCommand(dc, ctxPayload, false, replyToMessageId);
+        await (0, dispatch_commands_1.dispatchSystemCommand)(dc, ctxPayload, false, replyToMessageId);
         return;
     }
-    const { dispatcher, replyOptions, markDispatchIdle, markFullyComplete, abortCard } = createFeishuReplyDispatcher({
+    const { dispatcher, replyOptions, markDispatchIdle, markFullyComplete, abortCard } = (0, reply_dispatcher_1.createFeishuReplyDispatcher)({
         cfg: dc.accountScopedCfg,
         agentId: dc.route.agentId,
+        sessionKey: dc.threadSessionKey ?? dc.route.sessionKey,
         chatId: dc.ctx.chatId,
         replyToMessageId: replyToMessageId ?? dc.ctx.messageId,
         accountId: dc.account.accountId,
@@ -66,8 +70,8 @@ async function dispatchNormalMessage(dc, ctxPayload, chatHistories, historyKey, 
     const abortController = new AbortController();
     // Register the active dispatcher so the monitor abort fast-path can
     // terminate the streaming card before this task completes.
-    const queueKey = buildQueueKey(dc.account.accountId, dc.ctx.chatId, dc.ctx.threadId);
-    registerActiveDispatcher(queueKey, { abortCard, abortController });
+    const queueKey = (0, chat_queue_1.buildQueueKey)(dc.account.accountId, dc.ctx.chatId, dc.ctx.threadId);
+    (0, chat_queue_1.registerActiveDispatcher)(queueKey, { abortCard, abortController });
     const effectiveSessionKey = dc.threadSessionKey ?? dc.route.sessionKey;
     dc.log(`feishu[${dc.account.accountId}]: dispatching to agent (session=${effectiveSessionKey})`);
     log.info(`dispatching to agent (session=${effectiveSessionKey})`);
@@ -93,28 +97,45 @@ async function dispatchNormalMessage(dc, ctxPayload, chatHistories, historyKey, 
         markDispatchIdle();
         // Clean up consumed history entries
         if (dc.isGroup && historyKey && chatHistories) {
-            clearHistoryEntriesIfEnabled({
+            (0, reply_history_1.clearHistoryEntriesIfEnabled)({
                 historyMap: chatHistories,
                 historyKey,
                 limit: historyLimit,
             });
         }
         dc.log(`feishu[${dc.account.accountId}]: dispatch complete (queuedFinal=${queuedFinal}, replies=${counts.final})`);
-        log.info(`dispatch complete (replies=${counts.final}, elapsed=${ticketElapsed()}ms)`);
+        log.info(`dispatch complete (replies=${counts.final}, elapsed=${(0, lark_ticket_1.ticketElapsed)()}ms)`);
     }
     finally {
-        unregisterActiveDispatcher(queueKey);
+        (0, chat_queue_1.unregisterActiveDispatcher)(queueKey);
     }
 }
 // ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
-export async function dispatchToAgent(params) {
+async function dispatchToAgent(params) {
     // 1. Derive shared context (including route resolution + system event)
-    const dc = buildDispatchContext(params);
+    const dc = (0, dispatch_context_1.buildDispatchContext)(params);
+    // 1a. Thread detection fallback for topic groups.
+    //     In topic groups (chat_mode=topic), reply events may carry root_id
+    //     without thread_id.  When threadSession is enabled, use root_id as
+    //     a synthetic threadId so replies stay inside the topic instead of
+    //     creating a new top-level message.
+    if (!dc.isThread && dc.isGroup && dc.ctx.rootId && dc.account.config?.threadSession === true) {
+        const threadCapable = await (0, chat_info_cache_1.isThreadCapableGroup)({
+            cfg: dc.accountScopedCfg,
+            chatId: dc.ctx.chatId,
+            accountId: dc.account.accountId,
+        });
+        if (threadCapable) {
+            log.info(`inferred thread from root_id=${dc.ctx.rootId} in topic group ${dc.ctx.chatId}`);
+            dc.isThread = true;
+            dc.ctx = { ...dc.ctx, threadId: dc.ctx.rootId };
+        }
+    }
     // 1b. Resolve thread session isolation (async: may query group info API)
     if (dc.isThread && dc.ctx.threadId) {
-        dc.threadSessionKey = await resolveThreadSessionKey({
+        dc.threadSessionKey = await (0, dispatch_context_1.resolveThreadSessionKey)({
             accountScopedCfg: dc.accountScopedCfg,
             account: dc.account,
             chatId: dc.ctx.chatId,
@@ -123,27 +144,27 @@ export async function dispatchToAgent(params) {
         });
     }
     // 2. Build annotated message body
-    const messageBody = buildMessageBody(params.ctx, params.quotedContent);
+    const messageBody = (0, dispatch_builders_1.buildMessageBody)(params.ctx, params.quotedContent);
     // 3. Permission-error notification (optional side-effect).
     //    Isolated so a failure here does not block the main message dispatch.
     if (params.permissionError) {
         try {
-            await dispatchPermissionNotification(dc, params.permissionError, params.replyToMessageId);
+            await (0, dispatch_commands_1.dispatchPermissionNotification)(dc, params.permissionError, params.replyToMessageId);
         }
         catch (err) {
             dc.error(`feishu[${dc.account.accountId}]: permission notification failed, continuing: ${String(err)}`);
         }
     }
     // 4. Build main envelope (with group chat history)
-    const { combinedBody, historyKey } = buildEnvelopeWithHistory(dc, messageBody, params.chatHistories, params.historyLimit);
+    const { combinedBody, historyKey } = (0, dispatch_builders_1.buildEnvelopeWithHistory)(dc, messageBody, params.chatHistories, params.historyLimit);
     // 5. Build BodyForAgent with mention annotation (if any).
     //    SDK >= 2026.2.10 no longer falls back to Body for BodyForAgent,
     //    so we must set it explicitly to preserve the annotation.
-    const bodyForAgent = buildBodyForAgent(params.ctx);
+    const bodyForAgent = (0, dispatch_builders_1.buildBodyForAgent)(params.ctx);
     // 6. Build InboundHistory for SDK metadata injection (>= 2026.2.10).
     //    The SDK's buildInboundUserContextPrefix renders these as structured
     //    JSON blocks; earlier SDK versions simply ignore unknown fields.
-    const threadHistoryKey = threadScopedKey(dc.ctx.chatId, dc.isThread ? dc.ctx.threadId : undefined);
+    const threadHistoryKey = (0, chat_queue_1.threadScopedKey)(dc.ctx.chatId, dc.isThread ? dc.ctx.threadId : undefined);
     const inboundHistory = dc.isGroup && params.chatHistories && params.historyLimit > 0
         ? (params.chatHistories.get(threadHistoryKey) ?? []).map((entry) => ({
             sender: entry.sender,
@@ -157,13 +178,13 @@ export async function dispatchToAgent(params) {
         ? params.groupConfig?.systemPrompt?.trim() || params.defaultGroupConfig?.systemPrompt?.trim() || undefined
         : undefined;
     const originatingTo = isBareNewOrReset && dc.isThread
-        ? encodeFeishuRouteTarget({
+        ? (0, targets_1.encodeFeishuRouteTarget)({
             target: dc.feishuTo,
             replyToMessageId: params.replyToMessageId ?? params.ctx.messageId,
             threadId: dc.ctx.threadId,
         })
         : undefined;
-    const ctxPayload = buildInboundPayload(dc, {
+    const ctxPayload = (0, dispatch_builders_1.buildInboundPayload)(dc, {
         body: combinedBody,
         bodyForAgent,
         rawBody: params.ctx.content,
@@ -172,7 +193,7 @@ export async function dispatchToAgent(params) {
         senderName: params.ctx.senderName ?? params.ctx.senderId,
         senderId: params.ctx.senderId,
         messageSid: params.ctx.messageId,
-        wasMentioned: mentionedBot(params.ctx),
+        wasMentioned: (0, mention_1.mentionedBot)(params.ctx),
         replyToBody: params.quotedContent,
         inboundHistory,
         extraFields: {
@@ -205,19 +226,19 @@ export async function dispatchToAgent(params) {
         try {
             let i18nTexts;
             if (isDoctorCommand) {
-                i18nTexts = await runFeishuDoctorI18n(dc.accountScopedCfg, dc.account.accountId);
+                i18nTexts = await (0, doctor_1.runFeishuDoctorI18n)(dc.accountScopedCfg, dc.account.accountId);
             }
             else if (isAuthCommand) {
-                i18nTexts = await runFeishuAuthI18n(dc.accountScopedCfg);
+                i18nTexts = await (0, auth_1.runFeishuAuthI18n)(dc.accountScopedCfg);
             }
             else if (isStartCommand) {
-                i18nTexts = runFeishuStartI18n(dc.accountScopedCfg);
+                i18nTexts = (0, index_1.runFeishuStartI18n)(dc.accountScopedCfg);
             }
             else {
-                i18nTexts = getFeishuHelpI18n();
+                i18nTexts = (0, index_1.getFeishuHelpI18n)();
             }
-            const card = buildI18nMarkdownCard(i18nTexts);
-            await sendCardFeishu({
+            const card = (0, send_1.buildI18nMarkdownCard)(i18nTexts);
+            await (0, send_1.sendCardFeishu)({
                 cfg: dc.accountScopedCfg,
                 to: dc.ctx.chatId,
                 card,
@@ -229,7 +250,7 @@ export async function dispatchToAgent(params) {
         catch (err) {
             const errMsg = err instanceof Error ? err.message : String(err);
             dc.error(`feishu[${dc.account.accountId}]: ${i18nCommandName} i18n dispatch failed: ${errMsg}`);
-            await sendMessageFeishu({
+            await (0, send_1.sendMessageFeishu)({
                 cfg: dc.accountScopedCfg,
                 to: dc.ctx.chatId,
                 text: `${i18nCommandName} failed: ${errMsg}`,
@@ -245,10 +266,10 @@ export async function dispatchToAgent(params) {
     // Resolve per-group skill filter (per-group > default "*")
     const skillFilter = dc.isGroup ? (params.groupConfig?.skills ?? params.defaultGroupConfig?.skills) : undefined;
     if (isCommand) {
-        await dispatchSystemCommand(dc, ctxPayload, isBareNewOrReset, params.replyToMessageId);
+        await (0, dispatch_commands_1.dispatchSystemCommand)(dc, ctxPayload, false, params.replyToMessageId);
         // /new and /reset explicitly start a new session — clear pending history
         if (isBareNewOrReset && dc.isGroup && historyKey && params.chatHistories) {
-            clearHistoryEntriesIfEnabled({
+            (0, reply_history_1.clearHistoryEntriesIfEnabled)({
                 historyMap: params.chatHistories,
                 historyKey,
                 limit: params.historyLimit,

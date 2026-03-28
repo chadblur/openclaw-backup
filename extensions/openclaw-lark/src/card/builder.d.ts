@@ -7,6 +7,7 @@
  * Provides utilities to construct Feishu Interactive Message Cards for
  * different agent response states (thinking, streaming, complete, confirm).
  */
+import type { FooterSessionMetrics } from './reply-dispatcher-types';
 /**
  * Element ID used for the streaming text area in cards. The CardKit
  * `cardElement.content()` API targets this element for typewriter-effect
@@ -79,6 +80,24 @@ export declare function formatReasoningDuration(ms: number): {
  * Format milliseconds into a human-readable duration string.
  */
 export declare function formatElapsed(ms: number): string;
+export declare function compactNumber(value: number): string;
+export declare function formatFooterRuntimeSegments(params: {
+    footer?: {
+        status?: boolean;
+        elapsed?: boolean;
+        tokens?: boolean;
+        cache?: boolean;
+        context?: boolean;
+        model?: boolean;
+    };
+    metrics?: FooterSessionMetrics;
+    elapsedMs?: number;
+    isError?: boolean;
+    isAborted?: boolean;
+}): {
+    zh: string[];
+    en: string[];
+};
 /**
  * Build a full Feishu Interactive Message Card JSON object for the
  * given state.
@@ -95,7 +114,12 @@ export declare function buildCardContent(state: CardState, data?: {
     footer?: {
         status?: boolean;
         elapsed?: boolean;
+        tokens?: boolean;
+        cache?: boolean;
+        context?: boolean;
+        model?: boolean;
     };
+    footerMetrics?: FooterSessionMetrics;
 }): FeishuCard;
 /**
  * Convert an old-format FeishuCard to CardKit JSON 2.0 format.

@@ -16,38 +16,40 @@
  *   - Token values are never included in the return payload (AI cannot see
  *     them).
  */
-import { Type } from '@sinclair/typebox';
-import { getLarkAccount } from '../core/accounts';
-import { assertOwnerAccessStrict, OwnerAccessDeniedError } from '../core/owner-policy';
-import { LarkClient } from '../core/lark-client';
-import { getAppGrantedScopes } from '../core/app-scope-checker';
-import { getTicket, withTicket } from '../core/lark-ticket';
-import { larkLogger } from '../core/lark-logger';
-const log = larkLogger('tools/oauth');
-import { handleFeishuMessage } from '../messaging/inbound/handler';
-import { formatLarkError } from '../core/api-error';
-import { enqueueFeishuChatTask } from '../channel/chat-queue';
-import { requestDeviceAuthorization, pollDeviceToken } from '../core/device-flow';
-import { getStoredToken, setStoredToken, tokenStatus } from '../core/token-store';
-import { revokeUAT } from '../core/uat-client';
-import { createCardEntity, sendCardByCardId, updateCardKitCardForAuth } from '../card/cardkit';
-import { buildAuthCard, buildAuthSuccessCard, buildAuthFailedCard, buildAuthIdentityMismatchCard } from './oauth-cards';
-import { json, registerTool } from './oapi/helpers';
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.registerFeishuOAuthTool = registerFeishuOAuthTool;
+exports.executeAuthorize = executeAuthorize;
+const typebox_1 = require("@sinclair/typebox");
+const accounts_1 = require("../core/accounts.js");
+const owner_policy_1 = require("../core/owner-policy.js");
+const lark_client_1 = require("../core/lark-client.js");
+const app_scope_checker_1 = require("../core/app-scope-checker.js");
+const lark_ticket_1 = require("../core/lark-ticket.js");
+const lark_logger_1 = require("../core/lark-logger.js");
+const log = (0, lark_logger_1.larkLogger)('tools/oauth');
+const handler_1 = require("../messaging/inbound/handler.js");
+const api_error_1 = require("../core/api-error.js");
+const chat_queue_1 = require("../channel/chat-queue.js");
+const device_flow_1 = require("../core/device-flow.js");
+const token_store_1 = require("../core/token-store.js");
+const uat_client_1 = require("../core/uat-client.js");
+const cardkit_1 = require("../card/cardkit.js");
+const oauth_cards_1 = require("./oauth-cards.js");
+const helpers_1 = require("./oapi/helpers.js");
 // ---------------------------------------------------------------------------
 // Schema
 // ---------------------------------------------------------------------------
-const FeishuOAuthSchema = Type.Object({
-    action: Type.Union([
+const FeishuOAuthSchema = typebox_1.Type.Object({
+    action: typebox_1.Type.Union([
         // Type.Literal("authorize"),  // 已由 auto-auth 自动处理，不再对外暴露
-        Type.Literal('revoke'),
+        typebox_1.Type.Literal('revoke'),
     ], {
-        description: 'revoke: 撤销当前用户的授权',
+        description: 'revoke: 撤销当前用户已保存的授权凭据',
     }),
 }, {
-    description: '飞书用户授权管理工具。' +
-        '【注意】授权流程由系统自动发起，不要主动调用此工具触发授权！' +
-        '此工具仅用于撤销授权（revoke）。' +
-        '不需要传入 user_open_id，系统自动识别当前用户。',
+    description: '飞书用户撤销授权工具。' +
+        '仅在用户明确说"撤销授权"、"取消授权"、"退出登录"、"清除授权"时调用。' +
+        '【严禁调用场景】用户说"重新授权"、"发起授权"、"重新发起"、"授权失败"、"授权过期"时，绝对不要调用此工具，授权流程由系统自动处理。',
 });
 const pendingFlows = new Map();
 // ---------------------------------------------------------------------------
@@ -89,34 +91,33 @@ async function verifyTokenIdentity(brand, accessToken, expectedOpenId) {
 // ---------------------------------------------------------------------------
 // Registration
 // ---------------------------------------------------------------------------
-export function registerFeishuOAuthTool(api) {
+function registerFeishuOAuthTool(api) {
     if (!api.config)
         return;
     const cfg = api.config;
-    registerTool(api, {
+    (0, helpers_1.registerTool)(api, {
         name: 'feishu_oauth',
         label: 'Feishu OAuth',
-        description: '飞书用户授权（OAuth）管理工具。' +
-            '【注意】授权流程由系统自动发起，不要主动调用此工具触发授权！' +
-            '此工具仅用于 revoke（撤销当前用户的授权）。' +
-            '不需要传入 user_open_id，系统自动从消息上下文获取当前用户。' +
-            '【Token 过期处理】当返回 token_expired 错误时，调用 revoke 撤销后，系统会自动重新发起授权流程。',
+        description: '飞书用户撤销授权工具。' +
+            '仅在用户明确说"撤销授权"、"取消授权"、"退出登录"、"清除授权"时调用 revoke。' +
+            '【严禁调用场景】用户说"重新授权"、"发起授权"、"重新发起"、"授权失败"、"授权过期"时，绝对不要调用此工具，授权流程由系统自动处理，无需人工干预。' +
+            '不需要传入 user_open_id，系统自动从消息上下文获取当前用户。',
         parameters: FeishuOAuthSchema,
         async execute(_toolCallId, params) {
             const p = params;
             // Resolve identity from trace context (set in monitor.ts).
-            const ticket = getTicket();
+            const ticket = (0, lark_ticket_1.getTicket)();
             const senderOpenId = ticket?.senderOpenId;
             if (!senderOpenId) {
-                return json({
+                return (0, helpers_1.json)({
                     error: '无法获取当前用户身份（senderOpenId），请在飞书对话中使用此工具。',
                 });
             }
             // Use the accountId from LarkTicket to resolve the correct account
             // (important for multi-account setups like prod + boe).
-            const acct = getLarkAccount(cfg, ticket.accountId);
+            const acct = (0, accounts_1.getLarkAccount)(cfg, ticket.accountId);
             if (!acct.configured) {
-                return json({
+                return (0, helpers_1.json)({
                     error: `账号 ${ticket.accountId} 缺少 appId 或 appSecret 配置`,
                 });
             }
@@ -157,38 +158,38 @@ export function registerFeishuOAuthTool(api) {
                     // REVOKE
                     // ---------------------------------------------------------------
                     case 'revoke': {
-                        await revokeUAT(account.appId, senderOpenId);
-                        return json({ success: true, message: '用户授权已撤销。' });
+                        await (0, uat_client_1.revokeUAT)(account.appId, senderOpenId);
+                        return (0, helpers_1.json)({ success: true, message: '用户授权已撤销。' });
                     }
                     default:
                         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                        return json({ error: `未知操作: ${p.action}` });
+                        return (0, helpers_1.json)({ error: `未知操作: ${p.action}` });
                 }
             }
             catch (err) {
                 log.error(`${p.action} failed: ${err}`);
-                return json({ error: formatLarkError(err) });
+                return (0, helpers_1.json)({ error: (0, api_error_1.formatLarkError)(err) });
             }
         },
     }, { name: 'feishu_oauth' });
-    api.logger.info?.('feishu_oauth: Registered feishu_oauth tool');
+    api.logger.debug?.('feishu_oauth: Registered feishu_oauth tool');
 }
 /**
  * 执行 OAuth 授权流程（Device Flow）
  * 可被 feishu_oauth 和 feishu_oauth_batch_auth 共享调用
  */
-export async function executeAuthorize(params) {
+async function executeAuthorize(params) {
     const { account, senderOpenId, scope, isBatchAuth, totalAppScopes, alreadyGranted, batchInfo, skipSyntheticMessage, showBatchAuthHint, forceAuth, onAuthComplete, cfg, ticket, } = params;
     const { appId, appSecret, brand, accountId } = account;
     // 0. Check if the user is the app owner (fail-close: 安全优先).
-    const sdk = LarkClient.fromAccount(account).sdk;
+    const sdk = lark_client_1.LarkClient.fromAccount(account).sdk;
     try {
-        await assertOwnerAccessStrict(account, sdk, senderOpenId);
+        await (0, owner_policy_1.assertOwnerAccessStrict)(account, sdk, senderOpenId);
     }
     catch (err) {
-        if (err instanceof OwnerAccessDeniedError) {
+        if (err instanceof owner_policy_1.OwnerAccessDeniedError) {
             log.warn(`non-owner user ${senderOpenId} attempted to authorize`);
-            return json({
+            return (0, helpers_1.json)({
                 error: 'permission_denied',
                 message: '当前应用仅限所有者（App Owner）使用。您没有权限发起授权，无法使用相关功能。',
             });
@@ -200,8 +201,8 @@ export async function executeAuthorize(params) {
     // 1. Check if user already authorised + scope coverage.
     // forceAuth=true 时跳过缓存检查，直接发起新 Device Flow。
     // 用于 AppScopeMissing 场景：应用权限刚被移除再补回，本地 UAT 缓存的 scope 状态不可信。
-    const existing = forceAuth ? null : await getStoredToken(appId, senderOpenId);
-    if (existing && tokenStatus(existing) !== 'expired') {
+    const existing = forceAuth ? null : await (0, token_store_1.getStoredToken)(appId, senderOpenId);
+    if (existing && (0, token_store_1.tokenStatus)(existing) !== 'expired') {
         // 如果请求了特定 scope，检查是否已覆盖
         if (effectiveScope) {
             const requestedScopes = effectiveScope.split(/\s+/).filter(Boolean);
@@ -223,7 +224,7 @@ export async function executeAuthorize(params) {
                         log.warn(`onAuthComplete failed: ${e}`);
                     }
                 }
-                return json({
+                return (0, helpers_1.json)({
                     success: true,
                     message: '用户已授权，scope 已覆盖。',
                     authorized: true,
@@ -240,7 +241,7 @@ export async function executeAuthorize(params) {
                     log.warn(`onAuthComplete failed: ${e}`);
                 }
             }
-            return json({
+            return (0, helpers_1.json)({
                 success: true,
                 message: '用户已授权，无需重复授权。',
                 authorized: true,
@@ -280,10 +281,10 @@ export async function executeAuthorize(params) {
             log.info(`new message, cancelling old flow for user=${senderOpenId}, app=${appId}, old cardId=${oldFlow.cardId}`);
             // 标记旧卡片为"授权未完成"
             try {
-                await updateCardKitCardForAuth({
+                await (0, cardkit_1.updateCardKitCardForAuth)({
                     cfg,
                     cardId: oldFlow.cardId,
-                    card: buildAuthFailedCard('新的授权请求已发起'),
+                    card: (0, oauth_cards_1.buildAuthFailedCard)('新的授权请求已发起'),
                     sequence: oldFlow.sequence + 1,
                     accountId,
                 });
@@ -299,9 +300,9 @@ export async function executeAuthorize(params) {
     let unavailableScopes = [];
     if (effectiveScope) {
         try {
-            const sdk = LarkClient.fromAccount(account).sdk;
+            const sdk = lark_client_1.LarkClient.fromAccount(account).sdk;
             const requestedScopes = effectiveScope.split(/\s+/).filter(Boolean);
-            const appScopes = await getAppGrantedScopes(sdk, appId, 'user');
+            const appScopes = await (0, app_scope_checker_1.getAppGrantedScopes)(sdk, appId, 'user');
             const availableScopes = requestedScopes.filter((s) => appScopes.includes(s));
             unavailableScopes = requestedScopes.filter((s) => !appScopes.includes(s));
             if (unavailableScopes.length > 0) {
@@ -310,7 +311,7 @@ export async function executeAuthorize(params) {
                     // 所有 scope 都未开通，直接返回错误
                     const openDomain = brand === 'lark' ? 'https://open.larksuite.com' : 'https://open.feishu.cn';
                     const permissionUrl = `${openDomain}/app/${appId}/permission`;
-                    return json({
+                    return (0, helpers_1.json)({
                         error: 'app_scopes_not_granted',
                         message: `应用未开通任何请求的用户权限，无法发起授权。请先在开放平台开通以下权限：\n${unavailableScopes.map((s) => `- ${s}`).join('\n')}\n\n权限管理地址：${permissionUrl}`,
                         unavailable_scopes: unavailableScopes,
@@ -328,14 +329,14 @@ export async function executeAuthorize(params) {
         }
     }
     // 3. Request device authorisation.
-    const deviceAuth = await requestDeviceAuthorization({
+    const deviceAuth = await (0, device_flow_1.requestDeviceAuthorization)({
         appId,
         appSecret,
         brand,
         scope: filteredScope,
     });
     // 4. Build and send authorisation card.
-    const authCard = buildAuthCard({
+    const authCard = (0, oauth_cards_1.buildAuthCard)({
         verificationUriComplete: deviceAuth.verificationUriComplete,
         expiresMin: Math.round(deviceAuth.expiresIn / 60),
         scope: filteredScope, // 使用过滤后的 scope
@@ -352,13 +353,13 @@ export async function executeAuthorize(params) {
     let seq;
     const chatId = ticket?.chatId;
     if (!chatId || !ticket) {
-        return json({ error: '无法确定发送目标' });
+        return (0, helpers_1.json)({ error: '无法确定发送目标' });
     }
     if (reuseCardId) {
         // 复用旧卡片：原地更新内容（scope + 授权链接），不创建新卡片
         const newSeq = reuseSeq + 1;
         try {
-            await updateCardKitCardForAuth({
+            await (0, cardkit_1.updateCardKitCardForAuth)({
                 cfg,
                 cardId: reuseCardId,
                 card: authCard,
@@ -370,11 +371,11 @@ export async function executeAuthorize(params) {
         catch (err) {
             log.warn(`failed to update existing card, creating new one: ${err}`);
             // 降级：创建新卡片
-            const newCardId = await createCardEntity({ cfg, card: authCard, accountId });
+            const newCardId = await (0, cardkit_1.createCardEntity)({ cfg, card: authCard, accountId });
             if (!newCardId)
-                return json({ error: '创建授权卡片失败' });
+                return (0, helpers_1.json)({ error: '创建授权卡片失败' });
             if (chatId) {
-                await sendCardByCardId({
+                await (0, cardkit_1.sendCardByCardId)({
                     cfg,
                     to: chatId,
                     cardId: newCardId,
@@ -398,11 +399,11 @@ export async function executeAuthorize(params) {
     }
     else {
         // 首次创建卡片
-        const newCardId = await createCardEntity({ cfg, card: authCard, accountId });
+        const newCardId = await (0, cardkit_1.createCardEntity)({ cfg, card: authCard, accountId });
         if (!newCardId) {
-            return json({ error: '创建授权卡片失败' });
+            return (0, helpers_1.json)({ error: '创建授权卡片失败' });
         }
-        await sendCardByCardId({
+        await (0, cardkit_1.sendCardByCardId)({
             cfg,
             to: chatId,
             cardId: newCardId,
@@ -426,7 +427,7 @@ export async function executeAuthorize(params) {
     pendingFlows.set(flowKey, currentFlow);
     let pendingFlowDelete = false;
     // Fire-and-forget – polling happens asynchronously.
-    pollDeviceToken({
+    (0, device_flow_1.pollDeviceToken)({
         appId,
         appSecret,
         brand,
@@ -448,10 +449,10 @@ export async function executeAuthorize(params) {
                 log.warn(`identity mismatch! expected=${senderOpenId}, ` +
                     `actual=${identity.actualOpenId ?? 'unknown'}, cardId=${cardId}`);
                 try {
-                    await updateCardKitCardForAuth({
+                    await (0, cardkit_1.updateCardKitCardForAuth)({
                         cfg,
                         cardId,
-                        card: buildAuthIdentityMismatchCard(brand),
+                        card: (0, oauth_cards_1.buildAuthIdentityMismatchCard)(brand),
                         sequence: ++seq,
                         accountId,
                     });
@@ -476,14 +477,14 @@ export async function executeAuthorize(params) {
                 scope: result.token.scope,
                 grantedAt: now,
             };
-            await setStoredToken(storedToken);
+            await (0, token_store_1.setStoredToken)(storedToken);
             // 1. Update card → success immediately so user sees
             //    visual confirmation right away.
             try {
-                await updateCardKitCardForAuth({
+                await (0, cardkit_1.updateCardKitCardForAuth)({
                     cfg,
                     cardId,
-                    card: buildAuthSuccessCard(brand),
+                    card: (0, oauth_cards_1.buildAuthSuccessCard)(brand),
                     sequence: ++seq,
                     accountId,
                 });
@@ -536,12 +537,12 @@ export async function executeAuthorize(params) {
                         log: (msg) => log.info(msg),
                         error: (msg) => log.error(msg),
                     };
-                    const { status, promise } = enqueueFeishuChatTask({
+                    const { status, promise } = (0, chat_queue_1.enqueueFeishuChatTask)({
                         accountId,
                         chatId,
                         threadId: ticket.threadId,
                         task: async () => {
-                            await withTicket({
+                            await (0, lark_ticket_1.withTicket)({
                                 messageId: syntheticMsgId,
                                 chatId,
                                 accountId,
@@ -549,7 +550,7 @@ export async function executeAuthorize(params) {
                                 senderOpenId,
                                 chatType: ticket.chatType,
                                 threadId: ticket.threadId,
-                            }, () => handleFeishuMessage({
+                            }, () => (0, handler_1.handleFeishuMessage)({
                                 cfg,
                                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                                 event: syntheticEvent,
@@ -572,10 +573,10 @@ export async function executeAuthorize(params) {
         else {
             // Update card → failure.
             try {
-                await updateCardKitCardForAuth({
+                await (0, cardkit_1.updateCardKitCardForAuth)({
                     cfg,
                     cardId,
-                    card: buildAuthFailedCard(result.message),
+                    card: (0, oauth_cards_1.buildAuthFailedCard)(result.message),
                     sequence: ++seq,
                     accountId,
                 });
@@ -613,7 +614,7 @@ export async function executeAuthorize(params) {
         message += `\n\n⚠️ **注意**：以下权限因应用未开通而被跳过，如需使用请先在开放平台开通：\n${unavailableScopes.map((s) => `- ${s}`).join('\n')}\n\n权限管理地址：${permissionUrl}`;
     }
     const openDomainForResult = brand === 'lark' ? 'https://open.larksuite.com' : 'https://open.feishu.cn';
-    return json({
+    return (0, helpers_1.json)({
         success: true,
         message,
         awaiting_authorization: true,

@@ -1,7 +1,7 @@
 {
   "meta": {
     "lastTouchedVersion": "2026.3.11",
-    "lastTouchedAt": "2026-03-23T09:47:33.054Z"
+    "lastTouchedAt": "2026-03-23T12:00:38.201Z"
   },
   "wizard": {
     "lastRunAt": "2026-03-17T13:56:15.873Z",
@@ -23,6 +23,79 @@
             "compat": {
               "supportsStore": false
             }
+          }
+        ]
+      },
+      "claudex.us.ci": {
+        "baseUrl": "https://code.claudex.us.ci/v1",
+        "apiKey": "<REDACTED>",
+        "api": "openai-completions",
+        "models": [
+          {
+            "id": "gpt-5.4",
+            "name": "gpt-5.4"
+          },
+          {
+            "id": "gpt-5.3-codex",
+            "name": "gpt-5.3-codex"
+          },
+          {
+            "id": "gpt-5.2",
+            "name": "gpt-5.2"
+          },
+          {
+            "id": "gpt-5.2-codex",
+            "name": "gpt-5.2-codex"
+          },
+          {
+            "id": "101/anthropic/claude-sonnet-4.6",
+            "name": "101/anthropic/claude-sonnet-4.6"
+          },
+          {
+            "id": "MiniMax-M2.5",
+            "name": "MiniMax-M2.5"
+          },
+          {
+            "id": "grok-4.20-fast",
+            "name": "grok-4.20-fast"
+          },
+          {
+            "id": "grok-imagine-1.0-video",
+            "name": "grok-imagine-1.0-video"
+          }
+        ]
+      },
+      "daiju.live": {
+        "baseUrl": "https://api.daiju.live/v1",
+        "apiKey": "<REDACTED>",
+        "api": "openai-completions",
+        "headers": {
+          "User-Agent": "Mozilla/5.0"
+        },
+        "models": [
+          {
+            "id": "claude-opus-4-6",
+            "name": "claude-opus-4-6"
+          },
+          {
+            "id": "claude-sonnet-4-6",
+            "name": "claude-sonnet-4-6"
+          },
+          {
+            "id": "gpt-5.4",
+            "name": "gpt-5.4"
+          },
+          {
+            "id": "gpt-5.3-codex",
+            "name": "gpt-5.3-codex"
+          },
+          {
+            "id": "gpt-5.2",
+            "name": "gpt-5.2"
+          },
+          {
+            "id": "gpt-5.2-codex",
+            "name": "gpt-5.2-codex"
           }
         ]
       },
@@ -54,7 +127,7 @@
   "agents": {
     "defaults": {
       "model": {
-        "primary": "CLIProxy.103.180/gpt-5.4"
+        "primary": "daiju.live/claude-opus-4-6"
       },
       "workspace": "/root/.openclaw/workspace",
       "compaction": {
@@ -168,6 +241,9 @@
           "allowAgents": [
             "zhongshu"
           ]
+        },
+        "tools": {
+          "profile": "full"
         }
       },
       {
@@ -288,7 +364,18 @@
         "pm",
         "rd",
         "qa",
-        "ce"
+        "ce",
+        "taizi",
+        "zhongshu",
+        "menxia",
+        "shangshu",
+        "hubu",
+        "libu",
+        "bingbu",
+        "xingbu",
+        "gongbu",
+        "libu_hr",
+        "zaochao"
       ]
     }
   },
@@ -319,6 +406,13 @@
       "match": {
         "channel": "feishu",
         "accountId": "feishu-bot-ce"
+      }
+    },
+    {
+      "agentId": "taizi",
+      "match": {
+        "channel": "feishu",
+        "accountId": "feishu-bot-taizi"
       }
     }
   ],
@@ -430,6 +524,22 @@
             }
           }
         },
+        "feishu-bot-taizi": {
+          "enabled": true,
+          "appId": "cli_a94b914cce38dcc6",
+          "appSecret": "<REDACTED>",
+          "openId": "ou_6a707315ec0d664521102220136baca9",
+          "connectionMode": "websocket",
+          "domain": "feishu",
+          "groupPolicy": "open",
+          "allowBots": "all",
+          "groups": {
+            "*": {
+              "requireMention": false,
+              "allowBots": true
+            }
+          }
+        },
         "default": {
           "groupPolicy": "open"
         }
@@ -440,6 +550,10 @@
         "status": true
       },
       "threadSession": true
+    },
+    "lightclawbot": {
+      "enabled": true,
+      "apiKeys": "<REDACTED>"
     }
   },
   "gateway": {
@@ -475,12 +589,12 @@
   },
   "plugins": {
     "allow": [
-      "openclaw-lark",
       "telegram",
       "discord",
       "openclaw-qqbot",
       "feishu",
-      "openclaw-weixin"
+      "openclaw-weixin",
+      "lightclawbot"
     ],
     "entries": {
       "feishu": {
@@ -492,9 +606,6 @@
       "discord": {
         "enabled": true
       },
-      "openclaw-lark": {
-        "enabled": true
-      },
       "openclaw-qqbot": {
         "enabled": true
       },
@@ -504,14 +615,20 @@
       "wecom": {
         "enabled": true
       },
-      "adp-openclaw": {
-        "enabled": true
-      },
       "openclaw-plugin-yuanbao": {
         "enabled": true
       },
       "openclaw-weixin": {
         "enabled": true
+      },
+      "lightclawbot": {
+        "enabled": true
+      },
+      "adp-openclaw": {
+        "enabled": true
+      },
+      "memory-tdai": {
+        "enabled": false
       }
     },
     "installs": {
@@ -530,45 +647,59 @@
       },
       "openclaw-qqbot": {
         "source": "npm",
-        "spec": "@tencent-connect/openclaw-qqbot@1.6.3",
+        "spec": "@tencent-connect/openclaw-qqbot@1.6.5",
         "installPath": "/root/.openclaw/extensions/openclaw-qqbot",
-        "version": "1.6.3",
-        "installedAt": "2026-03-23T09:15:02.000Z"
+        "version": "1.6.5",
+        "installedAt": "2026-03-27T15:59:51.000Z"
       },
       "ddingtalk": {
         "source": "npm",
-        "spec": "@largezhou/ddingtalk",
+        "spec": "@largezhou/ddingtalk@2.0.1",
         "installPath": "/root/.openclaw/extensions/ddingtalk",
-        "version": "1.4.2",
-        "installedAt": "2026-03-23T09:15:12.000Z"
+        "version": "2.0.1",
+        "installedAt": "2026-03-27T16:00:29.000Z"
       },
       "wecom": {
         "source": "npm",
-        "spec": "@mocrane/wecom",
+        "spec": "@mocrane/wecom@2026.3.24",
         "installPath": "/root/.openclaw/extensions/wecom",
-        "version": "2026.3.20",
-        "installedAt": "2026-03-23T09:15:49.000Z"
-      },
-      "adp-openclaw": {
-        "source": "npm",
-        "spec": "adp-openclaw",
-        "installPath": "/root/.openclaw/extensions/adp-openclaw",
-        "version": "0.0.69",
-        "installedAt": "2026-03-23T09:15:53.000Z"
+        "version": "2026.3.24",
+        "installedAt": "2026-03-27T16:01:16.000Z"
       },
       "openclaw-plugin-yuanbao": {
         "source": "npm",
-        "spec": "openclaw-plugin-yuanbao@1.0.3",
+        "spec": "openclaw-plugin-yuanbao@2.1.0",
         "installPath": "/root/.openclaw/extensions/openclaw-plugin-yuanbao",
-        "version": "1.0.3",
-        "installedAt": "2026-03-23T09:15:59.000Z"
+        "version": "2.1.0",
+        "installedAt": "2026-03-27T16:02:04.000Z"
       },
       "openclaw-weixin": {
         "source": "npm",
-        "spec": "@tencent-weixin/openclaw-weixin",
+        "spec": "@tencent-weixin/openclaw-weixin@2.0.1",
         "installPath": "/root/.openclaw/extensions/openclaw-weixin",
-        "version": "1.0.2",
-        "installedAt": "2026-03-23T09:16:04.000Z"
+        "version": "2.0.1",
+        "installedAt": "2026-03-27T16:02:27.000Z"
+      },
+      "lightclawbot": {
+        "source": "npm",
+        "spec": "lightclawbot",
+        "installPath": "/root/.openclaw/extensions/lightclawbot",
+        "version": "1.1.1",
+        "installedAt": "2026-03-27T16:11:13.000Z"
+      },
+      "adp-openclaw": {
+        "source": "npm",
+        "spec": "adp-openclaw@0.0.71",
+        "installPath": "/root/.openclaw/extensions/adp-openclaw",
+        "version": "0.0.71",
+        "installedAt": "2026-03-27T16:02:39.000Z"
+      },
+      "memory-tdai": {
+        "source": "npm",
+        "spec": "@tdai/memory-tdai@0.1.2",
+        "installPath": "/root/.openclaw/extensions/memory-tdai",
+        "version": "0.1.2",
+        "installedAt": "2026-03-27T16:04:12.000Z"
       }
     }
   }

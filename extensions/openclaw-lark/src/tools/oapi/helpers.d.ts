@@ -50,7 +50,7 @@ export declare function createFeishuClientFromConfig(config: ClawdbotConfig): La
  * return json({ error: "Invalid parameter" });
  * ```
  */
-export declare function json(data: unknown): any;
+export declare function json(data: unknown): import("../helpers").ToolResult;
 /**
  * 解析时间字符串为 Unix 时间戳（秒）
  *
@@ -179,4 +179,4 @@ import type { SchemaOptions } from '@sinclair/typebox';
  * 本函数生成 `{ type: 'string', enum: ['a', 'b'] }` 格式，
  * 兼容性更好。
  */
-export declare function StringEnum<T extends string>(values: T[], options?: SchemaOptions): any;
+export declare function StringEnum<T extends string>(values: T[], options?: SchemaOptions): import("@sinclair/typebox").TUnsafe<T>;

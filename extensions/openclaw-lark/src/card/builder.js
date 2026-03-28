@@ -8,7 +8,17 @@
  * Provides utilities to construct Feishu Interactive Message Cards for
  * different agent response states (thinking, streaming, complete, confirm).
  */
-import { optimizeMarkdownStyle } from './markdown-style';
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.REASONING_ELEMENT_ID = exports.STREAMING_ELEMENT_ID = void 0;
+exports.splitReasoningText = splitReasoningText;
+exports.stripReasoningTags = stripReasoningTags;
+exports.formatReasoningDuration = formatReasoningDuration;
+exports.formatElapsed = formatElapsed;
+exports.compactNumber = compactNumber;
+exports.formatFooterRuntimeSegments = formatFooterRuntimeSegments;
+exports.buildCardContent = buildCardContent;
+exports.toCardKit2 = toCardKit2;
+const markdown_style_1 = require("./markdown-style.js");
 // ---------------------------------------------------------------------------
 // Constants
 // ---------------------------------------------------------------------------
@@ -17,8 +27,8 @@ import { optimizeMarkdownStyle } from './markdown-style';
  * `cardElement.content()` API targets this element for typewriter-effect
  * streaming updates.
  */
-export const STREAMING_ELEMENT_ID = 'streaming_content';
-export const REASONING_ELEMENT_ID = 'reasoning_content';
+exports.STREAMING_ELEMENT_ID = 'streaming_content';
+exports.REASONING_ELEMENT_ID = 'reasoning_content';
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
@@ -37,7 +47,7 @@ const REASONING_PREFIX = 'Reasoning:\n';
  *
  * Equivalent to the framework's `splitTelegramReasoningText()`.
  */
-export function splitReasoningText(text) {
+function splitReasoningText(text) {
     if (typeof text !== 'string' || !text.trim())
         return {};
     const trimmed = text.trim();
@@ -85,7 +95,7 @@ function extractThinkingContent(text) {
  * Strip reasoning blocks — both XML tags with their content and any
  * "Reasoning:\n" prefixed content.
  */
-export function stripReasoningTags(text) {
+function stripReasoningTags(text) {
     // Strip complete XML blocks
     let result = text.replace(/<\s*(?:think(?:ing)?|thought|antthinking)\s*>[\s\S]*?<\s*\/\s*(?:think(?:ing)?|thought|antthinking)\s*>/gi, '');
     // Strip unclosed tag at end (streaming)
@@ -110,14 +120,14 @@ function cleanReasoningPrefix(text) {
  * Format reasoning duration into a human-readable i18n pair.
  * e.g. { zh: "思考了 3.2s", en: "Thought for 3.2s" }
  */
-export function formatReasoningDuration(ms) {
+function formatReasoningDuration(ms) {
     const d = formatElapsed(ms);
     return { zh: `思考了 ${d}`, en: `Thought for ${d}` };
 }
 /**
  * Format milliseconds into a human-readable duration string.
  */
-export function formatElapsed(ms) {
+function formatElapsed(ms) {
     const seconds = ms / 1000;
     return seconds < 60 ? `${seconds.toFixed(1)}s` : `${Math.floor(seconds / 60)}m ${Math.round(seconds % 60)}s`;
 }
@@ -135,6 +145,86 @@ function buildFooter(zhText, enText, isError) {
             text_size: 'notation',
         }];
 }
+function compactNumber(value) {
+    const abs = Math.abs(value);
+    if (abs >= 1_000_000) {
+        const m = value / 1_000_000;
+        return Math.abs(m) >= 100 ? `${Math.round(m)}m` : `${m.toFixed(1)}m`;
+    }
+    if (abs >= 1_000) {
+        const k = value / 1_000;
+        return Math.abs(k) >= 100 ? `${Math.round(k)}k` : `${k.toFixed(1)}k`;
+    }
+    return `${Math.round(value)}`;
+}
+function formatFooterRuntimeSegments(params) {
+    const { footer, metrics, elapsedMs, isError, isAborted } = params;
+    const zhParts = [];
+    const enParts = [];
+    if (footer?.status) {
+        if (isError) {
+            zhParts.push('出错');
+            enParts.push('Error');
+        }
+        else if (isAborted) {
+            zhParts.push('已停止');
+            enParts.push('Stopped');
+        }
+        else {
+            zhParts.push('已完成');
+            enParts.push('Completed');
+        }
+    }
+    if (footer?.elapsed && elapsedMs != null) {
+        const d = formatElapsed(elapsedMs);
+        zhParts.push(`耗时 ${d}`);
+        enParts.push(`Elapsed ${d}`);
+    }
+    if (footer?.tokens && metrics) {
+        const inTokens = typeof metrics.inputTokens === 'number' ? Math.max(0, metrics.inputTokens) : undefined;
+        const outTokens = typeof metrics.outputTokens === 'number' ? Math.max(0, metrics.outputTokens) : undefined;
+        if (inTokens != null && outTokens != null) {
+            const inLabel = compactNumber(inTokens);
+            const outLabel = compactNumber(outTokens);
+            zhParts.push(`↑ ${inLabel} ↓ ${outLabel}`);
+            enParts.push(`↑ ${inLabel} ↓ ${outLabel}`);
+        }
+    }
+    if (footer?.cache && metrics) {
+        const read = typeof metrics.cacheRead === 'number' ? Math.max(0, metrics.cacheRead) : undefined;
+        const write = typeof metrics.cacheWrite === 'number' ? Math.max(0, metrics.cacheWrite) : undefined;
+        const inputVal = typeof metrics.inputTokens === 'number' ? Math.max(0, metrics.inputTokens) : undefined;
+        if (read != null && write != null && inputVal != null) {
+            const total = read + write + inputVal;
+            const hit = total > 0 ? Math.round((read / total) * 100) : 0;
+            const left = compactNumber(read);
+            const right = compactNumber(write);
+            zhParts.push(`缓存 ${left}/${right} (${hit}%)`);
+            enParts.push(`Cache ${left}/${right} (${hit}%)`);
+        }
+    }
+    if (footer?.context && metrics) {
+        const freshTotal = metrics.totalTokensFresh === false ? undefined : metrics.totalTokens;
+        const total = typeof freshTotal === 'number' ? Math.max(0, freshTotal) : undefined;
+        const ctx = typeof metrics.contextTokens === 'number' ? Math.max(0, metrics.contextTokens) : undefined;
+        if (total != null && ctx != null) {
+            const totalLabel = compactNumber(total);
+            const ctxLabel = compactNumber(ctx);
+            const pct = ctx > 0 ? Math.round((total / ctx) * 100) : 0;
+            const pctLabel = `${pct}%`;
+            zhParts.push(`上下文 ${totalLabel}/${ctxLabel} (${pctLabel})`);
+            enParts.push(`Context ${totalLabel}/${ctxLabel} (${pctLabel})`);
+        }
+    }
+    if (footer?.model && metrics?.model) {
+        const model = metrics.model.trim();
+        if (model) {
+            zhParts.push(model);
+            enParts.push(model);
+        }
+    }
+    return { zh: zhParts, en: enParts };
+}
 // ---------------------------------------------------------------------------
 // buildCardContent
 // ---------------------------------------------------------------------------
@@ -142,7 +232,7 @@ function buildFooter(zhText, enText, isError) {
  * Build a full Feishu Interactive Message Card JSON object for the
  * given state.
  */
-export function buildCardContent(state, data = {}) {
+function buildCardContent(state, data = {}) {
     switch (state) {
         case 'thinking':
             return buildThinkingCard();
@@ -158,6 +248,7 @@ export function buildCardContent(state, data = {}) {
                 reasoningElapsedMs: data.reasoningElapsedMs,
                 isAborted: data.isAborted,
                 footer: data.footer,
+                footerMetrics: data.footerMetrics,
             });
         case 'confirm':
             return buildConfirmCard(data.confirmData);
@@ -198,7 +289,7 @@ function buildStreamingCard(partialText, toolCalls, reasoningText) {
         // Answer phase: show answer content only
         elements.push({
             tag: 'markdown',
-            content: optimizeMarkdownStyle(partialText),
+            content: (0, markdown_style_1.optimizeMarkdownStyle)(partialText),
         });
     }
     // Tool calls in progress
@@ -219,7 +310,7 @@ function buildStreamingCard(partialText, toolCalls, reasoningText) {
     };
 }
 function buildCompleteCard(params) {
-    const { text, toolCalls, elapsedMs, isError, reasoningText, reasoningElapsedMs, isAborted, footer } = params;
+    const { text, toolCalls, elapsedMs, isError, reasoningText, reasoningElapsedMs, isAborted, footer, footerMetrics } = params;
     const elements = [];
     // Collapsible reasoning panel (before main content)
     if (reasoningText) {
@@ -262,7 +353,7 @@ function buildCompleteCard(params) {
     // Full text content
     elements.push({
         tag: 'markdown',
-        content: optimizeMarkdownStyle(text),
+        content: (0, markdown_style_1.optimizeMarkdownStyle)(text),
     });
     // Tool calls summary
     if (toolCalls.length > 0) {
@@ -277,30 +368,16 @@ function buildCompleteCard(params) {
         });
     }
     // Footer meta-info: each metadata item is independently controlled via
-    // the `footer` config. Both status and elapsed default to hidden.
-    const zhParts = [];
-    const enParts = [];
-    if (footer?.status) {
-        if (isError) {
-            zhParts.push('出错');
-            enParts.push('Error');
-        }
-        else if (isAborted) {
-            zhParts.push('已停止');
-            enParts.push('Stopped');
-        }
-        else {
-            zhParts.push('已完成');
-            enParts.push('Completed');
-        }
-    }
-    if (footer?.elapsed && elapsedMs != null) {
-        const d = formatElapsed(elapsedMs);
-        zhParts.push(`耗时 ${d}`);
-        enParts.push(`Elapsed ${d}`);
-    }
-    if (zhParts.length > 0) {
-        elements.push(...buildFooter(zhParts.join(' · '), enParts.join(' · '), isError));
+    // the `footer` config.
+    const footerParts = formatFooterRuntimeSegments({
+        footer,
+        metrics: footerMetrics,
+        elapsedMs,
+        isError,
+        isAborted,
+    });
+    if (footerParts.zh.length > 0) {
+        elements.push(...buildFooter(footerParts.zh.join(' · '), footerParts.en.join(' · '), isError));
     }
     // Use the answer text (not reasoning) as the feed preview summary.
     // Strip markdown syntax so the preview reads as plain text.
@@ -392,7 +469,7 @@ function buildConfirmCard(confirmData) {
  * Convert an old-format FeishuCard to CardKit JSON 2.0 format.
  * JSON 2.0 uses `body.elements` instead of top-level `elements`.
  */
-export function toCardKit2(card) {
+function toCardKit2(card) {
     const result = {
         schema: '2.0',
         config: card.config,

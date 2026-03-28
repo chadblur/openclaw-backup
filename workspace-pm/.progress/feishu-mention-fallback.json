@@ -1,13 +1,13 @@
 {
   "task_id": "FEISHU-20260317-001",
   "reported_at": "2026-03-24T03:46:43+08:00",
-  "last_checked_at": "2026-03-24T22:31:42+08:00",
-  "source": "rd_session_history_and_code_fingerprint",
+  "last_checked_at": "2026-03-28T11:56:41+08:00",
+  "source": "rd_session_history",
   "session_key": "agent:rd:feishu:group:oc_e0b0bb9b0abdf7e6eda7eaac90a50c4f",
   "fingerprint": {
     "status": "completed_with_client_screenshot_confirmation",
     "task_board_status": "已完成",
-    "code": {
+    "baseline_code": {
       "mention_fallback": {
         "path": "/root/.openclaw/extensions/openclaw-lark/src/messaging/outbound/mention-fallback.js",
         "mtime": 1773763272.8179653,
@@ -21,13 +21,18 @@
         "sha256": "4271ed19caf5cc757422dda1774148a215aba6c3a12dbf3fe56ffca0bdbc8fc8"
       }
     },
+    "current_check": {
+      "method": "rd_session_history",
+      "rd_recent_result": "no_new_completion_or_restart_signal_found",
+      "latest_rd_visible_message_at": "2026-03-23T18:13:40+08:00"
+    },
     "evidence": [
       "此前状态文件记录：任务已闭环，且已完成群内同步",
-      "本次复查 RD 最近会话未出现新的完成/上线/需重启/已验证类增量进展",
-      "本次复查代码文件指纹可用，作为后续对比基线"
+      "本次复查 RD 最近会话未出现新的完成/已上线/需重启/已验证类增量进展",
+      "最近可见 RD 会话仍停留在 2026-03-23 的接收/说明口径，没有新的上线或验证回报"
     ]
   },
-  "summary": "任务此前已闭环。本次 04:01 复查未发现新的 RD 增量进展，因此不重复发送群消息。",
+  "summary": "任务此前已闭环。本次复查未发现新的 RD 增量进展，因此不重复发送群消息。",
   "last_check_result": "no_new_progress_since_closure_report",
   "action_taken": "no_group_message_sent"
 }

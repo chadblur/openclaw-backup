@@ -1,13 +1,17 @@
 "use strict";
 // SPDX-License-Identifier: MIT
-import { LarkClient } from '../../core/lark-client';
-import { normalizeFeishuTarget, resolveReceiveIdType } from '../../core/targets';
-import { optimizeMarkdownStyle } from '../../card/markdown-style';
-import { uploadAndSendMediaLark } from './media';
-import { formatLarkError } from '../../core/api-error';
-import { larkLogger } from '../../core/lark-logger';
-import { convertOpenIdMentions, convertOpenIdMentionsInCard, isMentionFallbackEnabled } from './mention-fallback';
-const log = larkLogger('outbound/deliver');
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.sendTextLark = sendTextLark;
+exports.sendCardLark = sendCardLark;
+exports.sendMediaLark = sendMediaLark;
+const accounts_1 = require("../../core/accounts.js");
+const lark_client_1 = require("../../core/lark-client.js");
+const targets_1 = require("../../core/targets.js");
+const markdown_style_1 = require("../../card/markdown-style.js");
+const media_1 = require("./media.js");
+const api_error_1 = require("../../core/api-error.js");
+const lark_logger_1 = require("../../core/lark-logger.js");
+const log = (0, lark_logger_1.larkLogger)('outbound/deliver');
 // ---------------------------------------------------------------------------
 // Internal helpers
 // ---------------------------------------------------------------------------
@@ -41,24 +45,25 @@ function normalizeAtMentions(text) {
  * Pre-process text for Lark rendering:
  * mention normalisation + table conversion + style optimization.
  */
-function prepareTextForLark(text, mentionFallbackEnabled) {
+function prepareTextForLark(cfg, text, accountId) {
     let processed = normalizeAtMentions(text);
-    // Fallback: convert plain `@ou_xxx` into clickable Feishu mentions.
-    if (mentionFallbackEnabled) {
-        processed = convertOpenIdMentions(processed, 'text');
-    }
-    // Convert markdown tables to Feishu-compatible format if the runtime
-    // provides a converter.
+    // Convert markdown tables to Feishu-compatible format using per-account
+    // tableMode setting.
     try {
-        const runtime = LarkClient.runtime;
-        if (runtime?.channel?.text?.convertMarkdownTables) {
-            processed = runtime.channel.text.convertMarkdownTables(processed, 'bullets');
+        const accountScopedCfg = (0, accounts_1.createAccountScopedConfig)(cfg, accountId);
+        const runtime = lark_client_1.LarkClient.runtime;
+        if (runtime?.channel?.text?.convertMarkdownTables && runtime.channel.text.resolveMarkdownTableMode) {
+            const tableMode = runtime.channel.text.resolveMarkdownTableMode({
+                cfg: accountScopedCfg,
+                channel: 'feishu',
+            });
+            processed = runtime.channel.text.convertMarkdownTables(processed, tableMode);
         }
     }
     catch {
         // Runtime not available -- use the text as-is.
     }
-    return optimizeMarkdownStyle(processed, 1);
+    return (0, markdown_style_1.optimizeMarkdownStyle)(processed, 1);
 }
 /**
  * Unified IM message sender — handles both reply and create paths for any
@@ -82,11 +87,11 @@ async function sendImMessage(params) {
         return result;
     }
     // --- Create path ---
-    const target = normalizeFeishuTarget(to);
+    const target = (0, targets_1.normalizeFeishuTarget)(to);
     if (!target) {
         throw new Error(`Cannot send message: "${to}" is not a valid target. ` + `Expected a chat_id (oc_*), open_id (ou_*), or user_id.`);
     }
-    const receiveIdType = resolveReceiveIdType(target);
+    const receiveIdType = (0, targets_1.resolveReceiveIdType)(target);
     log.info(`creating message to ${target} (msg_type=${msgType})`);
     const response = await client.im.message.create({
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -173,7 +178,7 @@ function detectCardJson(text) {
  * });
  * ```
  */
-export async function sendTextLark(params) {
+async function sendTextLark(params) {
     const { cfg, to, text, replyToMessageId, replyInThread, accountId } = params;
     // Detect card JSON in text — route to card sending before text preprocessing.
     const card = detectCardJson(text);
@@ -183,10 +188,8 @@ export async function sendTextLark(params) {
         return sendCardLark({ cfg, to, card, replyToMessageId, replyInThread, accountId });
     }
     log.info(`sendTextLark: target=${to}, textLength=${text.length}`);
-    const larkClient = LarkClient.fromCfg(cfg, accountId);
-    const mentionFallbackEnabled = isMentionFallbackEnabled(larkClient);
-    const client = larkClient.sdk;
-    const processedText = prepareTextForLark(text, mentionFallbackEnabled);
+    const client = lark_client_1.LarkClient.fromCfg(cfg, accountId).sdk;
+    const processedText = prepareTextForLark(cfg, text, accountId);
     const content = buildPostContent(processedText);
     return sendImMessage({ client, to, content, msgType: 'post', replyToMessageId, replyInThread });
 }
@@ -225,20 +228,17 @@ export async function sendTextLark(params) {
  * });
  * ```
  */
-export async function sendCardLark(params) {
+async function sendCardLark(params) {
     const { cfg, to, card, replyToMessageId, replyInThread, accountId } = params;
     const version = card.schema === '2.0' ? 'v2' : 'v1';
     log.info(`sendCardLark: target=${to}, cardVersion=${version}`);
-    const larkClient = LarkClient.fromCfg(cfg, accountId);
-    const mentionFallbackEnabled = isMentionFallbackEnabled(larkClient);
-    const client = larkClient.sdk;
-    const patchedCard = mentionFallbackEnabled ? convertOpenIdMentionsInCard(card) : card;
-    const content = JSON.stringify(patchedCard);
+    const client = lark_client_1.LarkClient.fromCfg(cfg, accountId).sdk;
+    const content = JSON.stringify(card);
     try {
         return await sendImMessage({ client, to, content, msgType: 'interactive', replyToMessageId, replyInThread });
     }
     catch (err) {
-        const detail = formatLarkError(err);
+        const detail = (0, api_error_1.formatLarkError)(err);
         log.error(`sendCardLark failed: ${detail}`);
         throw new Error(`Card send failed: ${detail}\n\n` +
             `Troubleshooting:\n` +
@@ -271,11 +271,11 @@ export async function sendCardLark(params) {
  * });
  * ```
  */
-export async function sendMediaLark(params) {
+async function sendMediaLark(params) {
     const { cfg, to, mediaUrl, replyToMessageId, replyInThread, accountId, mediaLocalRoots } = params;
     log.info(`sendMediaLark: target=${to}, mediaUrl=${mediaUrl}`);
     try {
-        const result = await uploadAndSendMediaLark({
+        const result = await (0, media_1.uploadAndSendMediaLark)({
             cfg,
             to,
             mediaUrl,

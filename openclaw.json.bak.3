@@ -1,7 +1,7 @@
 {
   "meta": {
     "lastTouchedVersion": "2026.3.11",
-    "lastTouchedAt": "2026-03-23T09:13:49.810Z"
+    "lastTouchedAt": "2026-03-23T09:47:33.054Z"
   },
   "wizard": {
     "lastRunAt": "2026-03-17T13:56:15.873Z",
@@ -159,6 +159,112 @@
             "rd",
             "qa"
           ]
+        }
+      },
+      {
+        "id": "taizi",
+        "workspace": "/root/.openclaw/workspace-taizi",
+        "subagents": {
+          "allowAgents": [
+            "zhongshu"
+          ]
+        }
+      },
+      {
+        "id": "zhongshu",
+        "workspace": "/root/.openclaw/workspace-zhongshu",
+        "subagents": {
+          "allowAgents": [
+            "menxia",
+            "shangshu"
+          ]
+        }
+      },
+      {
+        "id": "menxia",
+        "workspace": "/root/.openclaw/workspace-menxia",
+        "subagents": {
+          "allowAgents": [
+            "shangshu",
+            "zhongshu"
+          ]
+        }
+      },
+      {
+        "id": "shangshu",
+        "workspace": "/root/.openclaw/workspace-shangshu",
+        "subagents": {
+          "allowAgents": [
+            "zhongshu",
+            "menxia",
+            "hubu",
+            "libu",
+            "bingbu",
+            "xingbu",
+            "gongbu",
+            "libu_hr"
+          ]
+        }
+      },
+      {
+        "id": "hubu",
+        "workspace": "/root/.openclaw/workspace-hubu",
+        "subagents": {
+          "allowAgents": [
+            "shangshu"
+          ]
+        }
+      },
+      {
+        "id": "libu",
+        "workspace": "/root/.openclaw/workspace-libu",
+        "subagents": {
+          "allowAgents": [
+            "shangshu"
+          ]
+        }
+      },
+      {
+        "id": "bingbu",
+        "workspace": "/root/.openclaw/workspace-bingbu",
+        "subagents": {
+          "allowAgents": [
+            "shangshu"
+          ]
+        }
+      },
+      {
+        "id": "xingbu",
+        "workspace": "/root/.openclaw/workspace-xingbu",
+        "subagents": {
+          "allowAgents": [
+            "shangshu"
+          ]
+        }
+      },
+      {
+        "id": "gongbu",
+        "workspace": "/root/.openclaw/workspace-gongbu",
+        "subagents": {
+          "allowAgents": [
+            "shangshu"
+          ]
+        }
+      },
+      {
+        "id": "libu_hr",
+        "workspace": "/root/.openclaw/workspace-libu_hr",
+        "subagents": {
+          "allowAgents": [
+            "shangshu"
+          ]
+        }
+      },
+      {
+        "id": "zaochao",
+        "workspace": "/root/.openclaw/workspace-zaochao",
+        "subagents": {
+          "allowAgents": []
         }
       }
     ]
@@ -373,20 +479,12 @@
       "telegram",
       "discord",
       "openclaw-qqbot",
-      "feishu"
+      "feishu",
+      "openclaw-weixin"
     ],
     "entries": {
       "feishu": {
         "enabled": false
-      },
-      "skillhub": {
-        "enabled": true,
-        "config": {
-          "primaryCli": "skillhub",
-          "fallbackCli": "clawhub",
-          "primaryLabel": "cn-optimized",
-          "fallbackLabel": "public-registry"
-        }
       },
       "telegram": {
         "enabled": true

@@ -5,6 +5,8 @@
  *
  * Markdown 样式优化工具
  */
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.optimizeMarkdownStyle = optimizeMarkdownStyle;
 /**
  * 优化 Markdown 样式：
  * - 标题降级：H1 → H4，H2~H6 → H5
@@ -14,7 +16,7 @@
  * - 表格：单元格前后补空格，分隔符行规范化，表格前后加空行
  * - 代码块内容不受影响
  */
-export function optimizeMarkdownStyle(text, cardVersion = 2) {
+function optimizeMarkdownStyle(text, cardVersion = 2) {
     try {
         let r = _optimizeMarkdownStyle(text, cardVersion);
         r = stripInvalidImageKeys(r);
