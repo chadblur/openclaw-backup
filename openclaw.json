@@ -191,14 +191,37 @@
           }
         ]
       },
-      "qwencode": {
-        "baseUrl": "https://coding.dashscope.aliyuncs.com/v1",
+      "ice.v.ua": {
+        "baseUrl": "https://ice.v.ua/v1",
         "apiKey": "<REDACTED>",
         "api": "openai-completions",
         "models": [
           {
-            "id": "qwen3.5-plus",
-            "name": "Qwen3.5 Plus",
+            "id": "gpt-5.4",
+            "name": "gpt-5.4"
+          },
+          {
+            "id": "gpt-5.3-codex",
+            "name": "gpt-5.3-codex"
+          },
+          {
+            "id": "gpt-5.2",
+            "name": "gpt-5.2"
+          },
+          {
+            "id": "gpt-5.2-codex",
+            "name": "gpt-5.2-codex"
+          }
+        ]
+      },
+      "qwencode": {
+        "baseUrl": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+        "apiKey": "<REDACTED>",
+        "api": "openai-completions",
+        "models": [
+          {
+            "id": "qwen3.5-plus-2026-02-15",
+            "name": "Qwen3.5 Plus-2026-02-15",
             "input": [
               "text",
               "image"
@@ -239,7 +262,7 @@
   "agents": {
     "defaults": {
       "model": {
-        "primary": "qwencode/qwen3.5-plus"
+        "primary": "ice.v.ua/gpt-5.4"
       },
       "workspace": "/root/.openclaw/workspace",
       "compaction": {

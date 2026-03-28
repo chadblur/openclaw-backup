@@ -598,7 +598,7 @@
       ]
     },
     "qwencode": {
-      "baseUrl": "https://coding.dashscope.aliyuncs.com/v1",
+      "baseUrl": "https://dashscope.aliyuncs.com/compatible-mode/v1",
       "apiKey": "sk-50555eaa9e904b13b14d80fce7b49108",
       "api": "openai-completions",
       "models": [
@@ -709,6 +709,81 @@
         {
           "id": "glm-4.7",
           "name": "GLM-4.7",
+          "reasoning": false,
+          "input": [
+            "text"
+          ],
+          "cost": {
+            "input": 0,
+            "output": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0
+          },
+          "contextWindow": 200000,
+          "maxTokens": 8192,
+          "api": "openai-completions"
+        }
+      ]
+    },
+    "ice.v.ua": {
+      "baseUrl": "https://ice.v.ua/v1",
+      "apiKey": "sk-bd49bb06d7c332be46caeeef39c0bb8d922231e5383c5b5fbbf498249c076dd6",
+      "api": "openai-completions",
+      "models": [
+        {
+          "id": "gpt-5.4",
+          "name": "gpt-5.4",
+          "reasoning": false,
+          "input": [
+            "text"
+          ],
+          "cost": {
+            "input": 0,
+            "output": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0
+          },
+          "contextWindow": 200000,
+          "maxTokens": 8192,
+          "api": "openai-completions"
+        },
+        {
+          "id": "gpt-5.3-codex",
+          "name": "gpt-5.3-codex",
+          "reasoning": false,
+          "input": [
+            "text"
+          ],
+          "cost": {
+            "input": 0,
+            "output": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0
+          },
+          "contextWindow": 200000,
+          "maxTokens": 8192,
+          "api": "openai-completions"
+        },
+        {
+          "id": "gpt-5.2",
+          "name": "gpt-5.2",
+          "reasoning": false,
+          "input": [
+            "text"
+          ],
+          "cost": {
+            "input": 0,
+            "output": 0,
+            "cacheRead": 0,
+            "cacheWrite": 0
+          },
+          "contextWindow": 200000,
+          "maxTokens": 8192,
+          "api": "openai-completions"
+        },
+        {
+          "id": "gpt-5.2-codex",
+          "name": "gpt-5.2-codex",
           "reasoning": false,
           "input": [
             "text"
