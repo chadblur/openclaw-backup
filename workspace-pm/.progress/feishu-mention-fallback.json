@@ -1,8 +1,8 @@
 {
   "task_id": "FEISHU-20260317-001",
   "reported_at": "2026-03-24T03:46:43+08:00",
-  "last_checked_at": "2026-03-29T07:56:41+08:00",
-  "source": "rd_session_history_and_code_probe",
+  "last_checked_at": "2026-03-29T08:56:43+08:00",
+  "source": "rd_session_history",
   "session_key": "agent:rd:feishu:group:oc_e0b0bb9b0abdf7e6eda7eaac90a50c4f",
   "fingerprint": {
     "status": "completed_with_client_screenshot_confirmation",
@@ -22,26 +22,14 @@
       }
     },
     "current_check": {
-      "method": "rd_session_history_and_code_probe",
-      "rd_recent_result": "new_chat_activity_but_no_completion_or_restart_signal",
+      "method": "rd_session_history",
+      "rd_recent_result": "no_new_completion_or_restart_signal",
       "latest_rd_visible_message_at": "2026-03-28T15:30:40+08:00",
-      "deliver": {
-        "path": "/root/.openclaw/extensions/openclaw-lark/src/messaging/outbound/deliver.js",
-        "mtime_epoch": 1774666902,
-        "mtime": "2026-03-28 11:01:42.312655012 +0800",
-        "size": 12332,
-        "sha256": "f1600205324eef2748c8e868494fcc662c832d0c1c08ba05c72d08535bbeb3a5"
-      },
-      "mention_fallback": {
-        "path": "/root/.openclaw/extensions/openclaw-lark/src/messaging/outbound/mention-fallback.js",
-        "present": false
-      },
       "long_stale": true
     },
     "evidence": [
-      "本轮 RD 会话复查仍未看到‘完成/已上线/需重启/已验证’类新增结论",
-      "最新可见 RD 互动仍停留在 2026-03-28 15:30，内容是追问任务信息，不构成 FEISHU-20260317-001 的有效推进",
-      "代码探针结果与上轮一致：deliver.js 维持相同当前指纹，mention-fallback.js 在该路径下仍不存在",
+      "本轮 RD 会话复查未看到‘完成/已上线/需重启/已验证’类新增结论",
+      "最新可见 RD 会话仍停留在 2026-03-28 15:30，内容是追问 WEB-20260317-001 是否在任务清单，不是 FEISHU-20260317-001 的交付更新",
       "未满足‘有新增有效进展才发群消息’条件"
     ]
   },
