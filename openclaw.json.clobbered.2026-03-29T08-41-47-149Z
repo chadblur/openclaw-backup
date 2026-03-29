@@ -14,7 +14,7 @@
     "providers": {
       "qt-cool": {
         "baseUrl": "https://gpt.qt.cool/v1",
-        "apiKey": "<REDACTED>",
+        "apiKey": "sk-qt-cool-8Y5f1zpN5fptBrahQNdh6fLnsb1ne2OT",
         "api": "openai-completions",
         "models": [
           {
@@ -28,7 +28,7 @@
       },
       "windhub": {
         "baseUrl": "https://windhub.cc/v1",
-        "apiKey": "<REDACTED>",
+        "apiKey": "sk-B7rvJ7E9cKWgTSMCubL5n3G83zHi3R7JKrqOATjBgPfL1bNk",
         "api": "openai-completions",
         "models": [
           {
@@ -51,7 +51,7 @@
       },
       "ethan010203": {
         "baseUrl": "https://laoxi.ethan010203.online/v1",
-        "apiKey": "<REDACTED>",
+        "apiKey": "sk-9pGMHCfhVqErAoD3vSxJdJi0K9vWb9GYiXi5qCoiNKg9FrFU",
         "api": "openai-completions",
         "models": [
           {
@@ -74,7 +74,7 @@
       },
       "dgbmc": {
         "baseUrl": "https://freeapi.dgbmc.top/v1",
-        "apiKey": "<REDACTED>",
+        "apiKey": "sk-S9J9wiUk2YFQYHu7XlZxwGGzym4IKLhD83gmc5rDAyIm45k2",
         "api": "openai-completions",
         "models": [
           {
@@ -97,7 +97,7 @@
       },
       "claudex.us.ci": {
         "baseUrl": "https://code.claudex.us.ci/v1",
-        "apiKey": "<REDACTED>",
+        "apiKey": "sk-ibtCYMmJ72RNaCc_3qIWn61nFYyN0h7mn0ZrfBX1BY88qVyRiemImBLhXys",
         "api": "openai-completions",
         "models": [
           {
@@ -134,9 +134,9 @@
           }
         ]
       },
-      "小呆daiju": {
+      "daiju.live": {
         "baseUrl": "https://api.daiju.live/v1",
-        "apiKey": "<REDACTED>",
+        "apiKey": "sk-6kTeDDP2bOTHh6KBl5gZ0wmsAjCEyt0nzRopbxWyC4Z5ZPRN",
         "api": "openai-completions",
         "headers": {
           "User-Agent": "Mozilla/5.0"
@@ -170,7 +170,7 @@
       },
       "CLIProxy.103.180": {
         "baseUrl": "http://38.123.103.180:8317/v1",
-        "apiKey": "<REDACTED>",
+        "apiKey": "sk-pwm68mqLyOcQxxy9HbDg98s8nvR5sIhNY8X9nIwtfjoeBK2",
         "api": "openai-completions",
         "models": [
           {
@@ -193,7 +193,7 @@
       },
       "ice.v.ua": {
         "baseUrl": "https://ice.v.ua/v1",
-        "apiKey": "<REDACTED>",
+        "apiKey": "sk-bd49bb06d7c332be46caeeef39c0bb8d922231e5383c5b5fbbf498249c076dd6",
         "api": "openai-completions",
         "models": [
           {
@@ -216,7 +216,7 @@
       },
       "qwencode": {
         "baseUrl": "https://dashscope.aliyuncs.com/compatible-mode/v1",
-        "apiKey": "<REDACTED>",
+        "apiKey": "sk-50555eaa9e904b13b14d80fce7b49108",
         "api": "openai-completions",
         "models": [
           {
@@ -262,7 +262,7 @@
   "agents": {
     "defaults": {
       "model": {
-        "primary": "小呆daiju/gpt-5.2"
+        "primary": "ice.v.ua/gpt-5.4"
       },
       "workspace": "/root/.openclaw/workspace",
       "compaction": {
@@ -1150,7 +1150,7 @@
     "telegram": {
       "enabled": true,
       "dmPolicy": "pairing",
-      "botToken": "<REDACTED>",
+      "botToken": "8627460540:AAGtiua_rd819lLRLYs0rtJ5Qw2cIBGtwrM",
       "allowFrom": [
         1400706851
       ],
@@ -1159,7 +1159,7 @@
     },
     "discord": {
       "enabled": true,
-      "token": "<REDACTED>",
+      "token": "MTQ4MjczNzIxMzY1MjQ3MTg3OA.GKucr2.odMdorZYSMNn0PDoN1TT4v9r4cXyBblb44sjnU",
       "groupPolicy": "open",
       "streaming": "off",
       "dmPolicy": "pairing"
@@ -1167,7 +1167,7 @@
     "qqbot": {
       "enabled": true,
       "appId": "1903506803",
-      "clientSecret": "<REDACTED>"
+      "clientSecret": "0761wsnjZDdpoY3J"
     },
     "feishu": {
       "enabled": true,
@@ -1177,7 +1177,7 @@
         "feishu-bot-pm": {
           "enabled": true,
           "appId": "cli_a9320c5eeb9edcb5",
-          "appSecret": "<REDACTED>",
+          "appSecret": "CuNlinBxp9C5h3yyVmYQwc0JoRFA5VW8",
           "openId": "ou_ffda60cdc9458027d2049e8da90030b1",
           "connectionMode": "websocket",
           "domain": "feishu",
@@ -1193,7 +1193,7 @@
         "feishu-bot-rd": {
           "enabled": true,
           "appId": "cli_a933e77271b89cb2",
-          "appSecret": "<REDACTED>",
+          "appSecret": "qHzvFFymH7wkTQ7JJ0dbFc1OZgH64Sbp",
           "openId": "ou_5886be9f5cacc19175f0913755010769",
           "connectionMode": "websocket",
           "domain": "feishu",
@@ -1210,7 +1210,7 @@
         "feishu-bot-qa": {
           "enabled": true,
           "appId": "cli_a93380f932781cba",
-          "appSecret": "<REDACTED>",
+          "appSecret": "zn3THea32wMVQLB8BD2tEgbLsZdpatej",
           "openId": "ou_040cab9e8fc841904a919858aa68bb8f",
           "connectionMode": "websocket",
           "domain": "feishu",
@@ -1226,7 +1226,7 @@
         "feishu-bot-ce": {
           "enabled": true,
           "appId": "cli_a9338197aefe1cd2",
-          "appSecret": "<REDACTED>",
+          "appSecret": "VSmEFJks75WoEqoarnnoud3AlvI6hviV",
           "openId": "ou_2d2e1709632f246fa5889892d7e25a3b",
           "connectionMode": "websocket",
           "domain": "feishu",
@@ -1242,7 +1242,7 @@
         "feishu-bot-taizi": {
           "enabled": true,
           "appId": "cli_a94b914cce38dcc6",
-          "appSecret": "<REDACTED>",
+          "appSecret": "YbJiADT8rWRSt98kFzGiQc2ebxIVmXQI",
           "openId": "ou_6a707315ec0d664521102220136baca9",
           "connectionMode": "websocket",
           "domain": "feishu",
@@ -1268,7 +1268,9 @@
     },
     "lightclawbot": {
       "enabled": true,
-      "apiKeys": "<REDACTED>"
+      "apiKeys": [
+        "a2865fec64b9112177063afeb260cba51017529d"
+      ]
     }
   },
   "gateway": {
@@ -1286,8 +1288,12 @@
     },
     "auth": {
       "mode": "token",
-      "token": "<REDACTED>"
+      "token": "db41733d3fc897bf8a197de76eb589c0067f6e8e81f88187"
     },
+        "endpoints": {
+      "chatCompletions": true,
+      "responses": true
+    }
     "tailscale": {
       "mode": "off",
       "resetOnExit": false
@@ -1349,7 +1355,7 @@
         "enabled": true,
         "config": {
           "webSearch": {
-            "apiKey": "<REDACTED>"
+            "apiKey": "xai-loaB9Pd3C6BWPP7jRXcspUnEVIcfdmBuUOJ6fVZEjPPCWSikEzuvKu7a179ep8fCzP3CqFwIrY2BGkLB"
           }
         }
       },
