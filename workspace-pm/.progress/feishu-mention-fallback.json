@@ -1,7 +1,7 @@
 {
   "task_id": "FEISHU-20260317-001",
   "reported_at": "2026-03-24T03:46:43+08:00",
-  "last_checked_at": "2026-03-29T12:56:45+08:00",
+  "last_checked_at": "2026-03-29T14:36:45+08:00",
   "source": "rd_session_history",
   "session_key": "agent:rd:feishu:group:oc_e0b0bb9b0abdf7e6eda7eaac90a50c4f",
   "fingerprint": {
@@ -9,18 +9,19 @@
     "task_board_status": "已完成",
     "current_check": {
       "method": "rd_session_history",
-      "rd_recent_result": "no_new_completion_or_restart_signal",
+      "rd_recent_result": "no_new_completion_signal",
       "latest_rd_visible_message_at": "2026-03-29T10:59:58+08:00",
+      "rd_response_summary": "RD 表示未收到 PM 派发的具体任务单，暂无可汇报的开发进展",
       "long_stale": true
     },
     "evidence": [
-      "本轮 RD 会话复查未看到‘完成/已上线/需重启/已验证’类新增结论",
-      "最新可见消息是群里追问‘@PM 进展如何’，RD 回复仍表示未收到 PM 派发到 RD 的具体任务单，不是 FEISHU-20260317-001 的交付更新",
-      "本轮未见该任务新增有效推进信号",
-      "未满足‘有新增有效进展才发群消息’条件"
+      "本轮 RD 会话复查未看到'完成/已上线/需重启/已验证'类新增结论",
+      "2026-03-29 10:59 有新互动：有人@PM 问进展，RD 回复称未收到 PM 派发的具体任务单",
+      "该回复表明 FEISHU-20260317-001 仍未有效推进到 RD 开发阶段",
+      "未满足'有新增有效进展才发群消息'条件"
     ]
   },
-  "summary": "本轮检查仍未发现 FEISHU-20260317-001 的新增有效进展，因此不发群消息。",
+  "summary": "本轮检查发现 RD 会话有新互动，但 RD 明确表示未收到 PM 派发的任务单，FEISHU-20260317-001 仍无有效开发进展，因此不发群消息。",
   "last_check_result": "no_new_progress",
   "action_taken": "no_group_message_sent"
 }

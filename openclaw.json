@@ -262,7 +262,7 @@
   "agents": {
     "defaults": {
       "model": {
-        "primary": "ice.v.ua/gpt-5.4"
+        "primary": "qwencode/qwen3.5-plus-2026-02-15"
       },
       "workspace": "/root/.openclaw/workspace",
       "compaction": {
