@@ -134,6 +134,25 @@
           }
         ]
       },
+      "OAI-FREE-zhx47": {
+        "baseUrl": "https://newapi.zhx47.xyz/v1",
+        "apiKey": "<REDACTED>",
+        "api": "openai-completions",
+        "models": [
+          {
+            "id": "gpt-5.4",
+            "name": "gpt-5.4"
+          },
+          {
+            "id": "gpt-5.3-codex",
+            "name": "gpt-5.3-codex"
+          },
+          {
+            "id": "gpt-5.2",
+            "name": "gpt-5.2"
+          }
+        ]
+      },
       "小呆daiju": {
         "baseUrl": "https://api.daiju.live/v1",
         "apiKey": "<REDACTED>",
