@@ -281,7 +281,7 @@
   "agents": {
     "defaults": {
       "model": {
-        "primary": "小呆daiju/gpt-5.2"
+        "primary": "ice.v.ua/gpt-5.4"
       },
       "workspace": "/root/.openclaw/workspace",
       "compaction": {
@@ -1362,7 +1362,7 @@
         "enabled": true
       },
       "memory-tdai": {
-        "enabled": false
+        "enabled": true
       },
       "xai": {
         "enabled": true,
