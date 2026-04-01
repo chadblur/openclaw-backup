@@ -1,21 +1,31 @@
 {
   "task_id": "FEISHU-20260317-001",
   "reported_at": "2026-03-24T03:46:43+08:00",
-  "last_checked_at": "2026-04-02T00:11:43+08:00",
+  "last_checked_at": "2026-04-02T02:01:43+08:00",
   "source": "rd_session_history",
   "session_key": "agent:rd:feishu:group:oc_e0b0bb9b0abdf7e6eda7eaac90a50c4f",
   "fingerprint": {
     "status": "completed_with_client_screenshot_confirmation",
     "task_board_status": "已完成",
     "current_check": {
-      "method": "rd_session_history",
+      "method": "rd_session_history_and_code_path_probe",
       "rd_recent_result": "no_new_completion_or_restart_signal",
       "latest_rd_visible_message_at": "2026-03-29T10:59:58+08:00",
-      "long_stale": true
+      "long_stale": true,
+      "code_probe": {
+        "mention_fallback_js_found": false,
+        "deliver_js": {
+          "path": "/root/.openclaw/extensions/openclaw-lark/src/messaging/outbound/deliver.js",
+          "mtime": 1774666902.312655,
+          "size": 12332,
+          "sha256": "f1600205324eef2748c8e868494fcc662c832d0c1c08ba05c72d08535bbeb3a5"
+        }
+      }
     },
     "evidence": [
       "本轮 RD 会话复查未看到‘完成/已上线/需重启/已验证’类新增结论",
       "最新可见 RD 会话仍是 2026-03-29 10:59 群里追问进展，RD 回复仍表示未收到 PM 派发到 RD 的具体任务单，不是 FEISHU-20260317-001 的交付更新",
+      "代码路径探测仅找到 deliver.js，未找到提醒中提到的 mention-fallback.js，暂不能据此判断有新增代码落地",
       "本轮未见该任务新增有效推进信号",
       "未满足‘有新增有效进展才发群消息’条件"
     ]
