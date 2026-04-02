@@ -1,7 +1,7 @@
 {
   "task_id": "FEISHU-20260317-001",
   "reported_at": "2026-03-24T03:46:43+08:00",
-  "last_checked_at": "2026-04-02T08:56:43+08:00",
+  "last_checked_at": "2026-04-02T09:56:45+08:00",
   "source": "rd_session_history",
   "session_key": "agent:rd:feishu:group:oc_e0b0bb9b0abdf7e6eda7eaac90a50c4f",
   "fingerprint": {
@@ -15,7 +15,8 @@
       "code_probe": {
         "mention_fallback_js": "missing",
         "deliver_js_sha256": "f1600205324eef2748c8e868494fcc662c832d0c1c08ba05c72d08535bbeb3a5",
-        "deliver_js_mtime_epoch": 1774666902
+        "deliver_js_mtime_epoch": 1774666902,
+        "deliver_js_mtime": "2026-03-28 11:01:42.312655012 +0800"
       }
     },
     "evidence": [
