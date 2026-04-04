@@ -1,5 +1,5 @@
 {
-  "checked_at": "2026-04-04T15:11:45+08:00",
+  "checked_at": "2026-04-04T18:56:57+08:00",
   "source": "pm-heartbeat",
   "task_id": "FEISHU-20260317-001",
   "rd_progress_detected": false,
@@ -13,5 +13,6 @@
       "sha256": "f1600205324eef2748c8e868494fcc662c832d0c1c08ba05c72d08535bbeb3a5"
     }
   },
-  "group_update_sent": false
+  "group_update_sent": false,
+  "note": "本轮检查无新增进展，按提醒要求不发群消息。"
 }
