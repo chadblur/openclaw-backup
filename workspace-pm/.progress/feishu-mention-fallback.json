@@ -1,1 +1,20 @@
-{"checked_at":"2026-04-04T11:56:45+08:00","mention_fallback":{"path":null,"sha256":null,"mtime":null},"deliver":{"path":"/root/.openclaw/extensions/openclaw-lark/src/messaging/outbound/deliver.js","sha256":"f1600205324eef2748c8e868494fcc662c832d0c1c08ba05c72d08535bbeb3a5","mtime":1774666902},"note":"mention-fallback.js not found during this check"}
+{
+  "checked_at": "2026-04-04T12:56:45+08:00",
+  "task_id": "FEISHU-20260317-001",
+  "rd_signal": "no-new-progress-visible",
+  "rd_session_key": "agent:rd:feishu:group:oc_e0b0bb9b0abdf7e6eda7eaac90a50c4f",
+  "fingerprint": {
+    "deliver.js": {
+      "path": "/root/.openclaw/extensions/openclaw-lark/src/messaging/outbound/deliver.js",
+      "mtime": 1774666902.312655,
+      "size": 12332,
+      "sha256": "f1600205324eef2748c8e868494fcc662c832d0c1c08ba05c72d08535bbeb3a5"
+    },
+    "mention-fallback.js": {
+      "path": "/root/.openclaw/extensions/openclaw-lark/src/messaging/outbound/mention-fallback.js",
+      "missing": true
+    }
+  },
+  "reported_to_group": false,
+  "reason": "No completion/上线/验证 signal in RD session; no comparable new fallback file found."
+}
