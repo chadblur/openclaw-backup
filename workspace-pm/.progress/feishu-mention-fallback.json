@@ -1,9 +1,9 @@
 {
-  "checked_at": "2026-04-04T21:56:41+08:00",
+  "checked_at": "2026-04-04T22:51:41+08:00",
   "source": "pm-heartbeat",
   "task_id": "FEISHU-20260317-001",
   "rd_progress_detected": true,
-  "rd_note": "发现 RD 会话有新互动：2026-04-04 21:43 回复称‘能看到，你这条消息里是明确 @ 到我了’，说明群内 @ 触达能力至少在当前交互里可见，但未出现完成/上线/验证类开发结论。",
+  "rd_note": "RD 会话仍仅有 2026-04-04 21:43 关于‘能看到 PM @ 我’的触达反馈，尚未出现完成/上线/需重启/已验证类开发结论。",
   "fingerprint": {
     "mention_fallback_exists": false,
     "deliver_js": {
