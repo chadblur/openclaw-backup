@@ -1,20 +1,17 @@
 {
-  "checked_at": "2026-04-04T12:56:45+08:00",
+  "checked_at": "2026-04-04T13:56:45+08:00",
+  "source": "pm-heartbeat",
   "task_id": "FEISHU-20260317-001",
-  "rd_signal": "no-new-progress-visible",
-  "rd_session_key": "agent:rd:feishu:group:oc_e0b0bb9b0abdf7e6eda7eaac90a50c4f",
+  "rd_progress_detected": false,
+  "rd_note": "未发现 RD 会话内新的完成/上线/验证类进展；当前可见记录仍为 2026-03-29 提示尚未收到 PM 派发任务单。",
   "fingerprint": {
-    "deliver.js": {
+    "mention_fallback_exists": false,
+    "deliver_js": {
       "path": "/root/.openclaw/extensions/openclaw-lark/src/messaging/outbound/deliver.js",
       "mtime": 1774666902.312655,
       "size": 12332,
       "sha256": "f1600205324eef2748c8e868494fcc662c832d0c1c08ba05c72d08535bbeb3a5"
-    },
-    "mention-fallback.js": {
-      "path": "/root/.openclaw/extensions/openclaw-lark/src/messaging/outbound/mention-fallback.js",
-      "missing": true
     }
   },
-  "reported_to_group": false,
-  "reason": "No completion/上线/验证 signal in RD session; no comparable new fallback file found."
+  "group_update_sent": false
 }
